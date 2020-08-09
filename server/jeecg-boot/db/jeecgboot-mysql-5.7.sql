@@ -1,6 +1,6 @@
 -- 创建mysql库
-DROP DATABASE IF EXISTS `jeecg-boot`;
-create database `jeecg-boot` default character set utf8mb4 collate utf8mb4_general_ci;
+DROP DATABASE IF EXISTS `jeecg-boot-uav`;
+CREATE DATABASE `jeecg-boot-uav` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 /*
  Navicat Premium Data Transfer
@@ -20,23 +20,23 @@ create database `jeecg-boot` default character set utf8mb4 collate utf8mb4_gener
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-USE `jeecg-boot`;
+USE `jeecg-boot-uav`;
 
 -- ----------------------------
 -- Table structure for ces_field_kongj
 -- ----------------------------
 DROP TABLE IF EXISTS `ces_field_kongj`;
 CREATE TABLE `ces_field_kongj`  (
-  `id` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '主键',
-  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建人',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建日期',
-  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '更新人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新日期',
-  `sys_org_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '所属部门',
-  `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '输入框',
-  `sex` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '下拉框',
-  `radio` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'radio',
-  `checkbox` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'checkbox',
+  `id` VARCHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '主键',
+  `create_by` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` DATETIME(0) NULL DEFAULT NULL COMMENT '创建日期',
+  `update_by` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '更新人',
+  `update_time` DATETIME(0) NULL DEFAULT NULL COMMENT '更新日期',
+  `sys_org_code` VARCHAR(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '所属部门',
+  `name` VARCHAR(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '输入框',
+  `sex` VARCHAR(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '下拉框',
+  `radio` VARCHAR(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'radio',
+  `checkbox` VARCHAR(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'checkbox',
   `sel_mut` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '下拉多选',
   `sel_search` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '下拉搜索',
   `birthday` datetime(0) NULL DEFAULT NULL COMMENT '时间',
@@ -1927,7 +1927,7 @@ CREATE TABLE `sys_data_source`  (
 -- ----------------------------
 -- Records of sys_data_source
 -- ----------------------------
-INSERT INTO `sys_data_source` VALUES ('1209779538310004737', 'local_mysql', 'MySQL5.7', '本地数据库MySQL5.7', '1', 'com.mysql.jdbc.Driver', 'jdbc:mysql://127.0.0.1:3306/jeecg-boot?characterEncoding=UTF-8&useUnicode=true&useSSL=false', 'jeecg-boot', 'root', 'root', 'admin', '2019-12-25 18:14:53', 'admin', '2020-07-10 16:54:42', 'A01');
+INSERT INTO `sys_data_source` VALUES ('1209779538310004737', 'local_mysql', 'MySQL5.7', '本地数据库MySQL5.7', '1', 'com.mysql.jdbc.Driver', 'jdbc:mysql://127.0.0.1:3306/jeecg-boot-uav?characterEncoding=UTF-8&useUnicode=true&useSSL=false', 'jeecg-boot', 'root', 'root', 'admin', '2019-12-25 18:14:53', 'admin', '2020-07-10 16:54:42', 'A01');
 
 -- ----------------------------
 -- Table structure for sys_depart
@@ -3396,7 +3396,7 @@ INSERT INTO `sys_log` VALUES ('1257318617923563522', 1, '用户名: admin,登录
 INSERT INTO `sys_log` VALUES ('1257318643861139458', 2, '填值规则-分页列表查询', 1, 'admin', '管理员', '127.0.0.1', 'org.jeecg.modules.system.controller.SysFillRuleController.queryPageList()', NULL, '  sysFillRule: SysFillRule(id=null, ruleName=null, ruleCode=null, ruleClass=null, ruleParams=null, updateBy=null, updateTime=null, createBy=null, createTime=null)  pageNo: 1  pageSize: 10  req: org.apache.shiro.web.servlet.ShiroHttpServletRequest@5880023d', NULL, 158, 'admin', '2020-05-04 22:38:19', NULL, NULL);
 INSERT INTO `sys_log` VALUES ('1257318651620601857', 2, '编码校验规则-分页列表查询', 1, 'admin', '管理员', '127.0.0.1', 'org.jeecg.modules.system.controller.SysCheckRuleController.queryPageList()', NULL, '  sysCheckRule: SysCheckRule(id=null, ruleName=null, ruleCode=null, ruleJson=null, ruleDescription=null, updateBy=null, updateTime=null, createBy=null, createTime=null)  pageNo: 1  pageSize: 10  request: org.apache.shiro.web.servlet.ShiroHttpServletRequest@2944d5ae', NULL, 45, 'admin', '2020-05-04 22:38:21', NULL, NULL);
 INSERT INTO `sys_log` VALUES ('1257318654309150721', 2, '多数据源管理-分页列表查询', 1, 'admin', '管理员', '127.0.0.1', 'org.jeecg.modules.system.controller.SysDataSourceController.queryPageList()', NULL, '  sysDataSource: SysDataSource(id=null, code=null, name=null, remark=null, dbType=null, dbDriver=null, dbUrl=null, dbName=null, dbUsername=null, dbPassword=null, createBy=null, createTime=null, updateBy=null, updateTime=null, sysOrgCode=null)  pageNo: 1  pageSize: 10  req: org.apache.shiro.web.servlet.ShiroHttpServletRequest@44651e7c', NULL, 60, 'admin', '2020-05-04 22:38:22', NULL, NULL);
-INSERT INTO `sys_log` VALUES ('1257318671023452161', 2, '多数据源管理-编辑', 3, 'admin', '管理员', '127.0.0.1', 'org.jeecg.modules.system.controller.SysDataSourceController.edit()', NULL, '[{\"createBy\":\"admin\",\"createTime\":1577268893000,\"dbDriver\":\"com.mysql.jdbc.Driver\",\"dbName\":\"jeecg-boot\",\"dbPassword\":\"root\",\"dbType\":\"1\",\"dbUrl\":\"jdbc:mysql://127.0.0.1:3306/jeecg-boot?characterEncoding=UTF-8&useUnicode=true&useSSL=false\",\"dbUsername\":\"root\",\"id\":\"1209779538310004737\",\"name\":\"MySQL5.7\",\"remark\":\"本地数据库MySQL5.7\",\"sysOrgCode\":\"A01\",\"updateBy\":\"admin\",\"updateTime\":1588603105614}]', NULL, 34, 'admin', '2020-05-04 22:38:26', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1257318671023452161', 2, '多数据源管理-编辑', 3, 'admin', '管理员', '127.0.0.1', 'org.jeecg.modules.system.controller.SysDataSourceController.edit()', NULL, '[{\"createBy\":\"admin\",\"createTime\":1577268893000,\"dbDriver\":\"com.mysql.jdbc.Driver\",\"dbName\":\"jeecg-boot\",\"dbPassword\":\"root\",\"dbType\":\"1\",\"dbUrl\":\"jdbc:mysql://127.0.0.1:3306/jeecg-boot-uav?characterEncoding=UTF-8&useUnicode=true&useSSL=false\",\"dbUsername\":\"root\",\"id\":\"1209779538310004737\",\"name\":\"MySQL5.7\",\"remark\":\"本地数据库MySQL5.7\",\"sysOrgCode\":\"A01\",\"updateBy\":\"admin\",\"updateTime\":1588603105614}]', NULL, 34, 'admin', '2020-05-04 22:38:26', NULL, NULL);
 INSERT INTO `sys_log` VALUES ('1257318671723900930', 2, '多数据源管理-分页列表查询', 1, 'admin', '管理员', '127.0.0.1', 'org.jeecg.modules.system.controller.SysDataSourceController.queryPageList()', NULL, '  sysDataSource: SysDataSource(id=null, code=null, name=null, remark=null, dbType=null, dbDriver=null, dbUrl=null, dbName=null, dbUsername=null, dbPassword=null, createBy=null, createTime=null, updateBy=null, updateTime=null, sysOrgCode=null)  pageNo: 1  pageSize: 10  req: org.apache.shiro.web.servlet.ShiroHttpServletRequest@915482d', NULL, 16, 'admin', '2020-05-04 22:38:26', NULL, NULL);
 INSERT INTO `sys_log` VALUES ('1257875756186411010', 1, '用户名: 管理员,退出成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-05-06 11:32:04', NULL, NULL);
 INSERT INTO `sys_log` VALUES ('1257875844212269057', 1, '用户名: admin,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-05-06 11:32:26', NULL, NULL);
@@ -3624,7 +3624,7 @@ INSERT INTO `sys_log` VALUES ('1281511318214488065', 2, '编码校验规则-分�
 INSERT INTO `sys_log` VALUES ('1281511321653817345', 2, '填值规则-分页列表查询', 1, 'admin', '管理员', '127.0.0.1', 'org.jeecg.modules.system.controller.SysFillRuleController.queryPageList()', NULL, '  sysFillRule: SysFillRule(id=null, ruleName=null, ruleCode=null, ruleClass=null, ruleParams=null, updateBy=null, updateTime=null, createBy=null, createTime=null)  pageNo: 1  pageSize: 10  req: org.apache.shiro.web.servlet.ShiroHttpServletRequest@141a2c36', NULL, 16, 'admin', '2020-07-10 16:51:23', NULL, NULL);
 INSERT INTO `sys_log` VALUES ('1281511330424107009', 2, '编码校验规则-分页列表查询', 1, 'admin', '管理员', '127.0.0.1', 'org.jeecg.modules.system.controller.SysCheckRuleController.queryPageList()', NULL, '  sysCheckRule: SysCheckRule(id=null, ruleName=null, ruleCode=null, ruleJson=null, ruleDescription=null, updateBy=null, updateTime=null, createBy=null, createTime=null)  pageNo: 1  pageSize: 10  request: org.apache.shiro.web.servlet.ShiroHttpServletRequest@2801528a', NULL, 12, 'admin', '2020-07-10 16:51:25', NULL, NULL);
 INSERT INTO `sys_log` VALUES ('1281512143234084865', 2, '多数据源管理-分页列表查询', 1, 'admin', '管理员', '127.0.0.1', 'org.jeecg.modules.system.controller.SysDataSourceController.queryPageList()', NULL, '  sysDataSource: SysDataSource(id=null, code=null, name=null, remark=null, dbType=null, dbDriver=null, dbUrl=null, dbName=null, dbUsername=null, dbPassword=null, createBy=null, createTime=null, updateBy=null, updateTime=null, sysOrgCode=null)  pageNo: 1  pageSize: 10  req: org.apache.shiro.web.servlet.ShiroHttpServletRequest@e82dbcc', NULL, 21, 'admin', '2020-07-10 16:54:39', NULL, NULL);
-INSERT INTO `sys_log` VALUES ('1281512154952970241', 2, '多数据源管理-编辑', 3, 'admin', '管理员', '127.0.0.1', 'org.jeecg.modules.system.controller.SysDataSourceController.edit()', NULL, '[{\"createBy\":\"admin\",\"createTime\":1577268893000,\"dbDriver\":\"com.mysql.jdbc.Driver\",\"dbName\":\"jeecg-boot\",\"dbPassword\":\"root\",\"dbType\":\"1\",\"dbUrl\":\"jdbc:mysql://127.0.0.1:3306/jeecg-boot?characterEncoding=UTF-8&useUnicode=true&useSSL=false\",\"dbUsername\":\"root\",\"id\":\"1209779538310004737\",\"name\":\"MySQL5.7\",\"remark\":\"本地数据库MySQL5.7\",\"sysOrgCode\":\"A01\",\"updateBy\":\"admin\",\"updateTime\":1594371281682}]', NULL, 27, 'admin', '2020-07-10 16:54:42', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1281512154952970241', 2, '多数据源管理-编辑', 3, 'admin', '管理员', '127.0.0.1', 'org.jeecg.modules.system.controller.SysDataSourceController.edit()', NULL, '[{\"createBy\":\"admin\",\"createTime\":1577268893000,\"dbDriver\":\"com.mysql.jdbc.Driver\",\"dbName\":\"jeecg-boot\",\"dbPassword\":\"root\",\"dbType\":\"1\",\"dbUrl\":\"jdbc:mysql://127.0.0.1:3306/jeecg-boot-uav?characterEncoding=UTF-8&useUnicode=true&useSSL=false\",\"dbUsername\":\"root\",\"id\":\"1209779538310004737\",\"name\":\"MySQL5.7\",\"remark\":\"本地数据库MySQL5.7\",\"sysOrgCode\":\"A01\",\"updateBy\":\"admin\",\"updateTime\":1594371281682}]', NULL, 27, 'admin', '2020-07-10 16:54:42', NULL, NULL);
 INSERT INTO `sys_log` VALUES ('1281512155624058882', 2, '多数据源管理-分页列表查询', 1, 'admin', '管理员', '127.0.0.1', 'org.jeecg.modules.system.controller.SysDataSourceController.queryPageList()', NULL, '  sysDataSource: SysDataSource(id=null, code=null, name=null, remark=null, dbType=null, dbDriver=null, dbUrl=null, dbName=null, dbUsername=null, dbPassword=null, createBy=null, createTime=null, updateBy=null, updateTime=null, sysOrgCode=null)  pageNo: 1  pageSize: 10  req: org.apache.shiro.web.servlet.ShiroHttpServletRequest@469013ef', NULL, 17, 'admin', '2020-07-10 16:54:42', NULL, NULL);
 INSERT INTO `sys_log` VALUES ('1281512163014422530', 2, '填值规则-分页列表查询', 1, 'admin', '管理员', '127.0.0.1', 'org.jeecg.modules.system.controller.SysFillRuleController.queryPageList()', NULL, '  sysFillRule: SysFillRule(id=null, ruleName=null, ruleCode=null, ruleClass=null, ruleParams=null, updateBy=null, updateTime=null, createBy=null, createTime=null)  pageNo: 1  pageSize: 10  req: org.apache.shiro.web.servlet.ShiroHttpServletRequest@2d8cfe34', NULL, 14, 'admin', '2020-07-10 16:54:44', NULL, NULL);
 INSERT INTO `sys_log` VALUES ('1281512167053537281', 2, '编码校验规则-分页列表查询', 1, 'admin', '管理员', '127.0.0.1', 'org.jeecg.modules.system.controller.SysCheckRuleController.queryPageList()', NULL, '  sysCheckRule: SysCheckRule(id=null, ruleName=null, ruleCode=null, ruleJson=null, ruleDescription=null, updateBy=null, updateTime=null, createBy=null, createTime=null)  pageNo: 1  pageSize: 10  request: org.apache.shiro.web.servlet.ShiroHttpServletRequest@350a614e', NULL, 12, 'admin', '2020-07-10 16:54:45', NULL, NULL);

@@ -140,7 +140,7 @@
         },
         dbUrlMap: {
           // MySQL 数据库
-          '1': { dbUrl: 'jdbc:mysql://127.0.0.1:3306/jeecg-boot?characterEncoding=UTF-8&useUnicode=true&useSSL=false' },
+          '1': { dbUrl: 'jdbc:mysql://127.0.0.1:3306/jeecg-boot-uav?characterEncoding=UTF-8&useUnicode=true&useSSL=false' },
           // Oracle
           '2': { dbUrl: 'jdbc:oracle:thin:@127.0.0.1:1521:ORCL' },
           // SQLServer 数据库
