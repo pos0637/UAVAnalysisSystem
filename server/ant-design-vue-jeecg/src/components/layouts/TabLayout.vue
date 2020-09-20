@@ -18,7 +18,7 @@
         <span slot="tab" :pagekey="page.fullPath">{{ page.meta.title }}</span>
       </a-tab-pane>
     </a-tabs>
-    <div style="margin: 12px 12px 0;">
+    <div style="width: 100%; height: 100%; margin: 12px 12px 0;">
       <transition name="page-toggle">
         <keep-alive v-if="multipage">
           <router-view v-if="reloadFlag"/>
