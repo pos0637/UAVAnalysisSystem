@@ -5,7 +5,7 @@
  * @param {*} hex HEX颜色
  * @return {*} RGBA颜色
  */
-export function hexToRgb(hex) {
+export function hexToRgba(hex) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
         ? {

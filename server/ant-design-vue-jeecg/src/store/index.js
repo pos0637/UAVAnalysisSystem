@@ -5,6 +5,7 @@ import app from './modules/app'
 import user from './modules/user'
 import permission from './modules/permission'
 import enhance from './modules/enhance'
+import uav from './modules/uav'
 import getters from './getters'
 
 Vue.use(Vuex)
@@ -14,7 +15,8 @@ export default new Vuex.Store({
     app,
     user,
     permission,
-    enhance
+    enhance,
+    uav
   },
   state: {
 

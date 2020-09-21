@@ -1,7 +1,8 @@
 <template>
-    <div style="width: 100%; height: 100%;">
+    <div style="width: 100%; height: 100%; position: relative;">
         {{ msg }}
         <div id="map-container"></div>
+        <UAVPathList />
     </div>
 </template>
 
@@ -13,11 +14,15 @@
 </style>
 
 <script>
+import UAVPathList from '@/components/business/uavPathList/UAVPathList';
 import { getAction } from '@/api/manage';
 import { getPaths } from '@/mock/path';
-import { hexToRgb } from '@/utils/color';
+import { hexToRgba } from '@/utils/color';
 
 export default {
+    components: {
+        UAVPathList
+    },
     data() {
         return {
             msg: '',
@@ -99,11 +104,11 @@ export default {
             const paths = getPaths();
             for (const path of paths) {
                 for (const point of path.points) {
-                    this._add3DPoint(point, hexToRgb(path.color));
+                    this._add3DPoint(point, hexToRgba(path.color));
                 }
 
                 for (let i = 1; i < path.points.length; i++) {
-                    this._add3DLine(path.points[i - 1], path.points[i], hexToRgb(path.color));
+                    this._add3DLine(path.points[i - 1], path.points[i], hexToRgba(path.color));
                 }
             }
         },
@@ -125,7 +130,6 @@ export default {
             geometry.vertexColors.push(color.r, color.g, color.b, color.a);
         },
         _lnglatToG20(lnglat) {
-            console.debug(lnglat);
             const result = this.map.lngLatToGeodeticCoord([lnglat.lng, lnglat.lat]);
             result.x = AMap.Util.format(result.x, 3);
             result.y = AMap.Util.format(result.y, 3);
