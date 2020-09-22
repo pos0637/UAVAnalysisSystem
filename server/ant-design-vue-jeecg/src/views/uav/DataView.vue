@@ -2,6 +2,7 @@
     <div style="width: 100%; height: 100%; position: relative;">
         {{ msg }}
         <div id="map-container"></div>
+        <UAVToolbox />
         <UAVPathList />
     </div>
 </template>
@@ -14,22 +15,45 @@
 </style>
 
 <script>
+import UAVToolbox from '@/components/business/uavToolbox/UAVToolbox';
 import UAVPathList from '@/components/business/uavPathList/UAVPathList';
 import { getAction } from '@/api/manage';
-import { getPaths } from '@/mock/path';
 import { hexToRgba } from '@/utils/color';
 
 export default {
     components: {
+        UAVToolbox,
         UAVPathList
     },
     data() {
         return {
             msg: '',
             map: null,
+            object3Dlayer: null,
             points3D: null,
             lines3D: null
         };
+    },
+    computed: {
+        paths() {
+            return this.$store.state.uav.dataViewPaths;
+        },
+        showAltitude() {
+            return this.$store.state.uav.showAltitude;
+        }
+    },
+    watch: {
+        '$store.state.uav.dataViewPaths': {
+            handler: function(newVal) {
+                this._clearPaths();
+                this._updatePaths();
+            },
+            deep: true
+        },
+        '$store.state.uav.showAltitude': function() {
+            this._clearPaths();
+            this._updatePaths();
+        }
     },
     created() {
         this.hello();
@@ -82,27 +106,44 @@ export default {
                 })
             );
 
-            // 添加3D点集合
-            this.points3D = new AMap.Object3D.Points();
-            this.points3D.transparent = true;
-
-            // 添加3D线集合
-            this.lines3D = new AMap.Object3D.Line();
-            this.lines3D.transparent = true;
-
             // 添加3D图层
-            const object3Dlayer = new AMap.Object3DLayer({ zIndex: 110, opacity: 1 });
-            this.map.add(object3Dlayer);
-            object3Dlayer.add(this.points3D);
-            object3Dlayer.add(this.lines3D);
+            this.object3Dlayer = new AMap.Object3DLayer({ zIndex: 110, opacity: 1 });
+            this.map.add(this.object3Dlayer);
 
             this.map.on('complete', () => {
                 console.debug('地图加载完成');
             });
         },
+        _clearPaths() {
+            if (this.object3Dlayer !== null) {
+                if (this.points3D !== null) {
+                    this.object3Dlayer.remove(this.points3D);
+                    this.points3D = null;
+                }
+
+                if (this.lines3D !== null) {
+                    this.object3Dlayer.remove(this.lines3D);
+                    this.lines3D = null;
+                }
+            }
+        },
         _updatePaths() {
-            const paths = getPaths();
+            // 添加3D点集合
+            this.points3D = new AMap.Object3D.Points();
+            this.points3D.transparent = true;
+            this.object3Dlayer.add(this.points3D);
+
+            // 添加3D线集合
+            this.lines3D = new AMap.Object3D.Line();
+            this.lines3D.transparent = true;
+            this.object3Dlayer.add(this.lines3D);
+
+            const paths = this.paths;
             for (const path of paths) {
+                if (!path.visible) {
+                    continue;
+                }
+
                 for (const point of path.points) {
                     this._add3DPoint(point, hexToRgba(path.color));
                 }
@@ -133,7 +174,7 @@ export default {
             const result = this.map.lngLatToGeodeticCoord([lnglat.lng, lnglat.lat]);
             result.x = AMap.Util.format(result.x, 3);
             result.y = AMap.Util.format(result.y, 3);
-            result.z = lnglat.alt;
+            result.z = this.showAltitude ? lnglat.alt : 100;
 
             return result;
         }
