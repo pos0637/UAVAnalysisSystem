@@ -16,10 +16,7 @@
 
 <style scoped>
 .container {
-    position: absolute;
-    left: 20px;
-    top: 60px;
-    width: 200px;
+    width: 240px;
     height: 500px;
     padding: 8px;
     background-color: rgba(255, 255, 255, 0.7);

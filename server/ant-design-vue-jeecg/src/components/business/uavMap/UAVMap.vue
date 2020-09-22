@@ -1,9 +1,5 @@
 <template>
-    <div style="width: 100%; height: 100%; position: relative;">
-        <div id="map-container" ref="mapContainer"></div>
-        <UAVToolbox />
-        <UAVPathList />
-    </div>
+    <div id="map-container" ref="mapContainer"></div>
 </template>
 
 <style scoped>
@@ -14,16 +10,10 @@
 </style>
 
 <script>
-import UAVToolbox from '@/components/business/uavToolbox/UAVToolbox';
-import UAVPathList from '@/components/business/uavPathList/UAVPathList';
 import { hexToRgba } from '@/utils/color';
 
 export default {
     name: 'UAVMap',
-    components: {
-        UAVToolbox,
-        UAVPathList
-    },
     data() {
         return {
             timer: null,
