@@ -3,11 +3,12 @@
         <a-list item-layout="horizontal" :data-source="paths">
             <a-list-item slot="renderItem" slot-scope="item">
                 <a-list-item-meta :description="item.description">
-                    <a slot="title"
-                        ><a-icon type="line-chart" /> &nbsp;{{ item.name }}&nbsp;
-                        <a-button shape="circle" :icon="item.visible ? 'eye' : 'eye-invisible'" @click="_onVisibleButtonClick(item)" />
-                        <a-button shape="circle"></a-button><a-button shape="circle" icon="close" @click="_onCloseButtonClick(item)" />
-                    </a>
+                    <div slot="title">
+                        <div class="name">{{ item.name }}</div>
+                        <a-button class="button" size="small" shape="circle" :icon="item.visible ? 'eye' : 'eye-invisible'" @click="_onVisibleButtonClick(item)" />
+                        <a-button class="button" size="small" shape="circle" icon="close" />
+                        <a-button class="button" size="small" shape="circle" icon="close" @click="_onCloseButtonClick(item)" />
+                    </div>
                 </a-list-item-meta>
             </a-list-item>
         </a-list>
@@ -22,6 +23,20 @@
     background-color: rgba(255, 255, 255, 0.7);
     overflow-y: scroll;
 }
+
+.name {
+    display: inline-block;
+    width: 120px;
+    margin: 0 4px;
+    overflow: hidden;
+    vertical-align: middle;
+    font-size: 1.3rem;
+}
+
+.button {
+    margin: 0 2px;
+    vertical-align: middle;
+}
 </style>
 
 <script>
@@ -34,11 +49,11 @@ export default {
     },
     methods: {
         _onVisibleButtonClick(item) {
-            this.$store.commit('switchPathVisible', item.id);
+            this.$store.commit('switchPathVisible', item);
         },
         _onColorChanged(item) {},
         _onCloseButtonClick(item) {
-            this.$store.commit('removePath', item.id);
+            this.$store.commit('removePath', item);
         }
     }
 };

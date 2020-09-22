@@ -3,7 +3,7 @@
         <UAVMap />
         <div class="toolbox">
             <UAVToolbox />
-            <div class="select-path"><Dropdown url="/uav/datav/paths" /><a-button style="margin-left: 8px;">添加</a-button></div>
+            <div class="select-path"><Dropdown ref="paths" :width="120" url="/uav/datav/paths" /><a-button style="margin-left: 8px;" @click="_onAddPathButtonClick">添加</a-button></div>
             <UAVPathList />
         </div>
     </div>
@@ -32,6 +32,7 @@ import Dropdown from '@/components/dropdown/Dropdown';
 import UAVToolbox from '@/components/business/uavToolbox/UAVToolbox';
 import UAVPathList from '@/components/business/uavPathList/UAVPathList';
 import UAVMap from '@/components/business/uavMap/UAVMap';
+import { getAction } from '@/api/manage';
 
 export default {
     components: {
@@ -40,7 +41,17 @@ export default {
         UAVPathList,
         UAVMap
     },
-    data() {},
-    methods: {}
+    methods: {
+        _onAddPathButtonClick() {
+            const id = this.$refs.paths.getSelected();
+            if (id !== null) {
+                getAction(`/uav/datav/path?id=${id}`).then(res => {
+                    if (res.success) {
+                        this.$store.commit('addPath', res.result);
+                    }
+                });
+            }
+        }
+    }
 };
 </script>

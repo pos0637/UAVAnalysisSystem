@@ -1,11 +1,29 @@
 <template>
-    <div id="map-container" ref="mapContainer"></div>
+    <div id="map-container" ref="mapContainer">
+        <div class="hint" :style="{ left: hintLeft, top: hintTop }" v-if="lastPointInfo !== null">
+            轨迹:{{ this.lastPointInfo.path.name }}<br />
+            时间:{{ this.lastPointInfo.point.time }}<br />
+            经度:{{ this.lastPointInfo.point.lng }}<br />
+            纬度:{{ this.lastPointInfo.point.lat }}<br />
+            高层:{{ this.lastPointInfo.point.alt }}<br />
+        </div>
+    </div>
 </template>
 
 <style scoped>
 #map-container {
     width: 100%;
     height: 100%;
+    position: relative;
+}
+
+.hint {
+    position: absolute;
+    width: 120;
+    height: 50;
+    z-index: 999;
+    padding: 8px;
+    background-color: rgba(255, 255, 255, 0.7);
 }
 </style>
 
@@ -17,10 +35,14 @@ export default {
     data() {
         return {
             timer: null,
+            hintLeft: '0px',
+            hintTop: '0px',
             map: null,
             object3Dlayer: null,
             points3D: null,
-            lines3D: null
+            lines3D: null,
+            lastPoint: null,
+            lastPointInfo: null
         };
     },
     computed: {
@@ -95,6 +117,23 @@ export default {
             this.map.on('complete', () => {
                 console.debug('地图加载完成');
             });
+
+            this.map.on('mousemove', e => {
+                const pixel = e.pixel;
+                const px = new AMap.Pixel(pixel.x, pixel.y);
+                const obj = this.map.getObject3DByContainerPos(px, [this.object3Dlayer], false);
+                if (obj !== null && obj.object === this.points3D) {
+                    if (this.lastPoint !== obj.index) {
+                        this.hintLeft = `${e.pixel.x}px`;
+                        this.hintTop = `${e.pixel.y}px`;
+                        this.lastPoint = obj.index;
+                        this.lastPointInfo = this._getPointInfo(this.lastPoint);
+                    }
+                } else {
+                    this.lastPoint = null;
+                    this.lastPointInfo = null;
+                }
+            });
         },
         _clearPaths() {
             if (this.object3Dlayer !== null) {
@@ -111,9 +150,11 @@ export default {
         },
         _updatePaths() {
             // 添加3D点集合
-            this.points3D = new AMap.Object3D.Points();
+            this.points3D = new AMap.Object3D.RoundPoints();
             this.points3D.transparent = true;
             this.object3Dlayer.add(this.points3D);
+            this.points3D.borderColor = [0.6, 0.8, 1, 1];
+            this.points3D.borderWeight = 3;
 
             // 添加3D线集合
             this.lines3D = new AMap.Object3D.Line();
@@ -139,7 +180,7 @@ export default {
             const geometry = this.points3D.geometry;
             const p = this._lnglatToG20(point);
             geometry.vertices.push(p.x, p.y, p.z);
-            geometry.pointSizes.push(10);
+            geometry.pointSizes.push(16);
             geometry.vertexColors.push(color.r, color.g, color.b, color.a);
         },
         _add3DLine(point1, point2, color) {
@@ -159,6 +200,26 @@ export default {
             result.z = this.showAltitude ? lnglat.alt : 100;
 
             return result;
+        },
+        _getPointInfo(pointIndex) {
+            const paths = this.paths;
+            let i = 0;
+            for (const path of paths) {
+                if (!path.visible) {
+                    continue;
+                }
+
+                for (let j = 0; j < path.points.length; i++, j++) {
+                    if (i === pointIndex) {
+                        return {
+                            path: path,
+                            point: path.points[j]
+                        };
+                    }
+                }
+            }
+
+            return null;
         }
     }
 };
