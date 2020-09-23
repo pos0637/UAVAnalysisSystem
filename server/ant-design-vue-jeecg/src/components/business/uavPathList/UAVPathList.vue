@@ -6,12 +6,13 @@
                     <div slot="title">
                         <div class="name">{{ item.name }}</div>
                         <a-button class="button" size="small" shape="circle" :icon="item.visible ? 'eye' : 'eye-invisible'" @click="_onVisibleButtonClick(item)" />
-                        <a-button class="button" size="small" shape="circle" icon="close" />
+                        <a-button class="button" size="small" shape="circle" icon="bg-colors" @click="_onColorChanged(item)" />
                         <a-button class="button" size="small" shape="circle" icon="close" @click="_onCloseButtonClick(item)" />
                     </div>
                 </a-list-item-meta>
             </a-list-item>
         </a-list>
+        <ColorPicker ref="colorPicker" @onPicked="_onColorPicked" />
     </div>
 </template>
 
@@ -40,8 +41,13 @@
 </style>
 
 <script>
+import ColorPicker from '@/components/colorpicker/ColorPicker';
+
 export default {
     name: 'UAVPathList',
+    components: {
+        ColorPicker
+    },
     computed: {
         paths() {
             return this.$store.state.uav.dataViewPaths;
@@ -51,9 +57,14 @@ export default {
         _onVisibleButtonClick(item) {
             this.$store.commit('switchPathVisible', item);
         },
-        _onColorChanged(item) {},
+        _onColorChanged(item) {
+            this.$refs.colorPicker.show(item.color, item);
+        },
         _onCloseButtonClick(item) {
             this.$store.commit('removePath', item);
+        },
+        _onColorPicked(color, item) {
+            this.$store.commit('setPathColor', { item, color });
         }
     }
 };

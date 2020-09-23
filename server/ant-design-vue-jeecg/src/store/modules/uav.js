@@ -26,7 +26,7 @@ const uav = {
                 }
             }
         },
-        setPathColor(state, item, color) {
+        setPathColor(state, { item, color }) {
             for (const path of state.dataViewPaths) {
                 if (path === item) {
                     path.color = color;
