@@ -201,7 +201,7 @@ export default {
             geometry.vertexColors.push(color.r, color.g, color.b, color.a);
         },
         _lnglatToG20(lnglat) {
-            const result = this.map.lngLatToGeodeticCoord([lnglat.lng, lnglat.lat]);
+            const result = this.map.lngLatToGeodeticCoord([lnglat.lng / 100, lnglat.lat / 100]);
             result.x = AMap.Util.format(result.x, 3);
             result.y = AMap.Util.format(result.y, 3);
             result.z = this.showAltitude ? lnglat.alt : this.altitude;
