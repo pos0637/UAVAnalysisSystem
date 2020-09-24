@@ -1,7 +1,8 @@
 const uav = {
     state: {
         dataViewPaths: [],
-        showAltitude: true
+        showAltitude: true,
+        altitude: 100
     },
     mutations: {
         setPaths(state, paths) {
@@ -36,6 +37,9 @@ const uav = {
         },
         switchShowAltitude(state) {
             state.showAltitude = !state.showAltitude;
+        },
+        setAltitude(state, altitude) {
+            state.altitude = altitude;
         }
     }
 };

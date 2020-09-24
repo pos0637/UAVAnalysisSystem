@@ -51,6 +51,9 @@ export default {
         },
         showAltitude() {
             return this.$store.state.uav.showAltitude;
+        },
+        altitude() {
+            return this.$store.state.uav.altitude;
         }
     },
     watch: {
@@ -62,6 +65,10 @@ export default {
             deep: true
         },
         '$store.state.uav.showAltitude': function() {
+            this._clearPaths();
+            this._updatePaths();
+        },
+        '$store.state.uav.altitude': function() {
             this._clearPaths();
             this._updatePaths();
         }
@@ -197,7 +204,7 @@ export default {
             const result = this.map.lngLatToGeodeticCoord([lnglat.lng, lnglat.lat]);
             result.x = AMap.Util.format(result.x, 3);
             result.y = AMap.Util.format(result.y, 3);
-            result.z = this.showAltitude ? lnglat.alt : 100;
+            result.z = this.showAltitude ? lnglat.alt : this.altitude;
 
             return result;
         },

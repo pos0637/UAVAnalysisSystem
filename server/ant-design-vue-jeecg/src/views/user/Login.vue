@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="main" style="width: 368px; margin: 0 auto;">
     <a-form :form="form" class="user-layout-login" ref="formLogin" id="formLogin">
       <a-tabs
         :activeKey="customActiveKey"
