@@ -17,7 +17,7 @@ module.exports = {
 
 
   //打包app时放开该配置
-  //publicPath:'./',
+  // publicPath:'./',
   configureWebpack: config => {
     //生产环境取消 console.log
     if (process.env.NODE_ENV === 'production') {
@@ -78,8 +78,10 @@ module.exports = {
           '/jeecg-boot': ''  //默认所有请求都加了jeecg-boot前缀，需要去掉
         }
       },*/
-      '/jeecg-boot': {
-        target: 'http://localhost:8080', //请求本地 需要jeecg-boot后台项目
+      // '/jeecg-boot': {
+      '/': {
+        // target: 'http://localhost:8080', //请求本地 需要jeecg-boot后台项目
+        target: 'http://analysis.shangyunsoft.com', //请求本地 需要jeecg-boot后台项目
         ws: false,
         changeOrigin: true
       },
