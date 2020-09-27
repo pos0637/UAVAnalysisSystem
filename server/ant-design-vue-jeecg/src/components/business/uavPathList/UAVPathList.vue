@@ -1,9 +1,9 @@
 <template>
     <div class="container">
         <a-list item-layout="horizontal" :data-source="paths">
-            <a-list-item slot="renderItem" slot-scope="item">
+            <a-list-item slot="renderItem" slot-scope="item" @dblclick="_onPathClick(item)">
                 <a-list-item-meta :description="item.description">
-                    <div slot="title" @dblclick="_onPathClick(item)">
+                    <div slot="title">
                         <div class="name">{{ item.name }}</div>
                         <a-button class="button" size="small" shape="circle" :icon="item.visible ? 'eye' : 'eye-invisible'" @click="_onVisibleButtonClick(item)" />
                         <a-button class="button" size="small" shape="circle" icon="bg-colors" @click="_onColorChanged(item)" />
