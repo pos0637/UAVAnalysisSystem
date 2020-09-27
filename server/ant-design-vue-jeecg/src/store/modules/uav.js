@@ -2,7 +2,8 @@ const uav = {
     state: {
         dataViewPaths: [],
         showAltitude: true,
-        altitude: 100
+        altitudeScaler: 1.0,
+        center: [12181.4324, 3112.6484]
     },
     mutations: {
         setPaths(state, paths) {
@@ -38,8 +39,16 @@ const uav = {
         switchShowAltitude(state) {
             state.showAltitude = !state.showAltitude;
         },
-        setAltitude(state, altitude) {
-            state.altitude = altitude;
+        setAltitudeScaler(state, altitudeScaler) {
+            state.altitudeScaler = altitudeScaler;
+        },
+        setCenter(state, item) {
+            for (const path of state.dataViewPaths) {
+                if (path === item) {
+                    state.center = [path.points[0].lng, path.points[0].lat];
+                    return;
+                }
+            }
         }
     }
 };

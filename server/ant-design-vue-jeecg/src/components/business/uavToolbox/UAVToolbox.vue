@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div style="display: inline-block; vertical-align: middle;"><a-switch checked-children="显示高度" un-checked-children="忽略高度" v-model="showAltitude" /></div>
-        <div style="display: inline-block; width: 120px; vertical-align: middle; margin: 0 8px;"><a-slider :default-value="altitude" :min="100" :max="1000" :setp="100" :disabled="showAltitude" v-model="altitude" /></div>
+        <div style="display: inline-block; width: 120px; vertical-align: middle; margin: 0 8px;"><a-slider :default-value="altitudeScaler" :min="0.1" :max="2" :step="0.1" :disabled="!showAltitude" v-model="altitudeScaler" /></div>
     </div>
 </template>
 
@@ -26,12 +26,12 @@ export default {
                 this.$store.commit('switchShowAltitude');
             }
         },
-        altitude: {
+        altitudeScaler: {
             get() {
-                return this.$store.state.uav.altitude;
+                return this.$store.state.uav.altitudeScaler;
             },
             set(newVal) {
-                this.$store.commit('setAltitude', newVal);
+                this.$store.commit('setAltitudeScaler', newVal);
             }
         }
     }

@@ -30,6 +30,11 @@
 <script>
 import { hexToRgba } from '@/utils/color';
 
+/**
+ * 高度中心
+ */
+const altitudeCenter = 500.0;
+
 export default {
     name: 'UAVMap',
     data() {
@@ -52,8 +57,12 @@ export default {
         showAltitude() {
             return this.$store.state.uav.showAltitude;
         },
-        altitude() {
-            return this.$store.state.uav.altitude;
+        altitudeScaler() {
+            return this.$store.state.uav.altitudeScaler;
+        },
+        center() {
+            const center = this.$store.state.uav.center;
+            return [center[0] / 100.0, center[1] / 100.0];
         }
     },
     watch: {
@@ -68,9 +77,12 @@ export default {
             this._clearPaths();
             this._updatePaths();
         },
-        '$store.state.uav.altitude': function() {
+        '$store.state.uav.altitudeScaler': function() {
             this._clearPaths();
             this._updatePaths();
+        },
+        '$store.state.uav.center': function() {
+            this._setCenter();
         }
     },
     mounted() {
@@ -94,7 +106,7 @@ export default {
             this.map = new AMap.Map('map-container', {
                 resizeEnable: true, // 是否监控地图容器尺寸变化
                 zoom: 17, // 初始化地图层级
-                center: [121.814324, 31.126484], // 初始化地图中心点
+                center: this.center, // 初始化地图中心点
                 rotateEnable: true,
                 pitchEnable: true,
                 pitch: 80,
@@ -183,6 +195,9 @@ export default {
                 }
             }
         },
+        _setCenter() {
+            this.map.setCenter(this.center);
+        },
         _add3DPoint(point, color) {
             const geometry = this.points3D.geometry;
             const p = this._lnglatToG20(point);
@@ -201,12 +216,15 @@ export default {
             geometry.vertexColors.push(color.r, color.g, color.b, color.a);
         },
         _lnglatToG20(lnglat) {
-            const result = this.map.lngLatToGeodeticCoord([lnglat.lng / 100, lnglat.lat / 100]);
+            const result = this.map.lngLatToGeodeticCoord([lnglat.lng / 100.0, lnglat.lat / 100.0]);
             result.x = AMap.Util.format(result.x, 3);
             result.y = AMap.Util.format(result.y, 3);
-            result.z = this.showAltitude ? lnglat.alt : this.altitude;
+            result.z = this.showAltitude ? this._calcAltitude(lnglat.alt, this.altitudeScaler) : -altitudeCenter;
 
             return result;
+        },
+        _calcAltitude(real, scaler) {
+            return -((real - altitudeCenter) * scaler + altitudeCenter);
         },
         _getPointInfo(pointIndex) {
             const paths = this.paths;
