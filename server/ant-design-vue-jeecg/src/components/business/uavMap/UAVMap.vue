@@ -46,7 +46,7 @@ export default {
             map: null,
             object3Dlayer: null,
             points3D: null,
-            meshLines: null,
+            lines3D: null,
             lastPoint: null,
             lastPointInfo: null
         };
@@ -171,11 +171,9 @@ export default {
                     this.points3D = null;
                 }
 
-                if (this.meshLines !== null) {
-                    for (const meshLine of this.meshLines) {
-                        this.object3Dlayer.remove(meshLine);
-                    }
-                    this.meshLines = null;
+                if (this.lines3D !== null) {
+                    this.object3Dlayer.remove(this.lines3D);
+                    this.lines3D = null;
                 }
             }
         },
@@ -187,37 +185,32 @@ export default {
             this.points3D.borderColor = [0.6, 0.8, 1, 1];
             this.points3D.borderWeight = 3;
 
+            // 添加3D线集合
+            this.lines3D = new AMap.Object3D.Line();
+            this.lines3D.transparent = true;
+            this.object3Dlayer.add(this.lines3D);
+
             const paths = this.paths;
             for (const path of paths) {
                 if (!path.visible) {
                     continue;
                 }
 
+                // 计算最大最小高度
+                const minHight = path.points.reduce((prev, cur) => {
+                    return prev.alt < cur.alt ? prev : cur;
+                }, -9999.0).alt;
+                const maxHight = path.points.reduce((prev, cur) => {
+                    return prev.alt > cur.alt ? prev : cur;
+                }, 0.0).alt;
+
                 for (const point of path.points) {
-                    this._add3DPoint(point, hexToRgba(path.color));
-                }
-            }
-
-            this.meshLines = [];
-            for (const path of paths) {
-                if (!path.visible) {
-                    continue;
+                    this._add3DPoint(point, this._calcColor(path.color, minHight, maxHight, point.alt));
                 }
 
-                // 添加3D曲线
-                const meshLine = new AMap.Object3D.MeshLine({
-                    path: path.points.map(p => {
-                        return new AMap.LngLat(p.lng / 100.0, p.lat / 100.0);
-                    }),
-                    height: path.points.map(p => {
-                        return this.showAltitude ? p.alt : 100;
-                    }),
-                    width: 3,
-                    color: 'rgba(55,129,240, 1)'
-                });
-                meshLine.transparent = true;
-                this.meshLines.push(meshLine);
-                this.object3Dlayer.add(meshLine);
+                for (let i = 1; i < path.points.length; i++) {
+                    this._add3DLine(path.points[i - 1], path.points[i], this._calcColor(path.color, minHight, maxHight, path.points[i].alt));
+                }
             }
         },
         _setCenter() {
@@ -284,7 +277,6 @@ export default {
                     points.push(new Three.Vector3(point.lng, point.lat, point.alt));
                 }
 
-                console.debug(scaler);
                 const curve = mode === 'line' ? this._interpolateLine3(points, scaler) : this._interpolateSplineCurve3(points, scaler);
 
                 // 生成新路径
@@ -308,6 +300,15 @@ export default {
         },
         _interpolateSplineCurve3(points, scaler) {
             return new Three.SplineCurve3(points).getPoints(points.length * scaler);
+        },
+        _calcColor(base, min, max, value) {
+            const rgba = hexToRgba(base);
+            const p = (value - min) / (max - min + 0.0001);
+            rgba.r -= p * rgba.r;
+            rgba.g -= p * rgba.g;
+            rgba.b -= p * rgba.b;
+
+            return rgba;
         }
     }
 };
