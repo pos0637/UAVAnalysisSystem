@@ -3,6 +3,8 @@ const uav = {
         dataViewPaths: [],
         showAltitude: true,
         altitudeScaler: 1.0,
+        interpolateMode: 'none',
+        interpolationScaler: 1.0,
         center: [12181.4324, 3112.6484]
     },
     mutations: {
@@ -41,6 +43,12 @@ const uav = {
         },
         setAltitudeScaler(state, altitudeScaler) {
             state.altitudeScaler = altitudeScaler;
+        },
+        setInterpolateMode(state, mode) {
+            state.interpolateMode = mode;
+        },
+        setInterpolationScaler(state, interpolationScaler) {
+            state.interpolationScaler = interpolationScaler;
         },
         setCenter(state, item) {
             for (const path of state.dataViewPaths) {

@@ -46,14 +46,15 @@ export default {
             map: null,
             object3Dlayer: null,
             points3D: null,
-            lines3D: null,
+            meshLines: null,
             lastPoint: null,
             lastPointInfo: null
         };
     },
     computed: {
         paths() {
-            return this.$store.state.uav.dataViewPaths;
+            const model = this.$store.state.uav;
+            return this._interpolate(model.dataViewPaths, model.interpolateMode, model.interpolationScaler);
         },
         showAltitude() {
             return this.$store.state.uav.showAltitude;
@@ -79,6 +80,14 @@ export default {
             this._updatePaths();
         },
         '$store.state.uav.altitudeScaler': function() {
+            this._clearPaths();
+            this._updatePaths();
+        },
+        '$store.state.uav.interpolateMode': function() {
+            this._clearPaths();
+            this._updatePaths();
+        },
+        '$store.state.uav.interpolationScaler': function() {
             this._clearPaths();
             this._updatePaths();
         },
@@ -162,11 +171,6 @@ export default {
                     this.points3D = null;
                 }
 
-                if (this.lines3D !== null) {
-                    this.object3Dlayer.remove(this.lines3D);
-                    this.lines3D = null;
-                }
-
                 if (this.meshLines !== null) {
                     for (const meshLine of this.meshLines) {
                         this.object3Dlayer.remove(meshLine);
@@ -183,11 +187,6 @@ export default {
             this.points3D.borderColor = [0.6, 0.8, 1, 1];
             this.points3D.borderWeight = 3;
 
-            // 添加3D线集合
-            this.lines3D = new AMap.Object3D.Line();
-            this.lines3D.transparent = true;
-            this.object3Dlayer.add(this.lines3D);
-
             const paths = this.paths;
             for (const path of paths) {
                 if (!path.visible) {
@@ -197,11 +196,6 @@ export default {
                 for (const point of path.points) {
                     this._add3DPoint(point, hexToRgba(path.color));
                 }
-                /*
-                for (let i = 1; i < path.points.length; i++) {
-                    this._add3DLine(path.points[i - 1], path.points[i], hexToRgba(path.color));
-                }
-                */
             }
 
             this.meshLines = [];
@@ -210,20 +204,13 @@ export default {
                     continue;
                 }
 
-                const points = [];
-                for (const point of path.points) {
-                    this._addVector3(points, point);
-                }
-
-                const curve = new Three.SplineCurve3(points).getPoints(50);
-
                 // 添加3D曲线
                 const meshLine = new AMap.Object3D.MeshLine({
-                    path: curve.map(p => {
-                        return new AMap.LngLat(p.x, p.y);
+                    path: path.points.map(p => {
+                        return new AMap.LngLat(p.lng / 100.0, p.lat / 100.0);
                     }),
-                    height: curve.map(p => {
-                        return p.z;
+                    height: path.points.map(p => {
+                        return this.showAltitude ? p.alt : 100;
                     }),
                     width: 3,
                     color: 'rgba(55,129,240, 1)'
@@ -252,13 +239,6 @@ export default {
             p = this._lnglatToG20(point2);
             geometry.vertices.push(p.x, p.y, p.z);
             geometry.vertexColors.push(color.r, color.g, color.b, color.a);
-        },
-        _add3DMeshLine(path, height, point, color) {
-            path.push(new AMap.LngLat(point.lng / 100.0, point.lat / 100.0));
-            height.push(this.showAltitude ? point.alt : 100);
-        },
-        _addVector3(path, point) {
-            path.push(new Three.Vector3(point.lng / 100.0, point.lat / 100.0, this.showAltitude ? point.alt : 100));
         },
         _lnglatToG20(lnglat) {
             const result = this.map.lngLatToGeodeticCoord([lnglat.lng / 100.0, lnglat.lat / 100.0]);
@@ -290,6 +270,44 @@ export default {
             }
 
             return null;
+        },
+        _interpolate(paths, mode, scaler) {
+            if (mode === 'none') {
+                return paths;
+            }
+
+            const result = [];
+            for (const path of paths) {
+                // 生成插值点
+                const points = [];
+                for (const point of path.points) {
+                    points.push(new Three.Vector3(point.lng, point.lat, point.alt));
+                }
+
+                console.debug(scaler);
+                const curve = mode === 'line' ? this._interpolateLine3(points, scaler) : this._interpolateSplineCurve3(points, scaler);
+
+                // 生成新路径
+                result.push({
+                    ...path,
+                    points: curve.map(p => {
+                        return { lng: p.x, lat: p.y, alt: p.z };
+                    })
+                });
+            }
+
+            return result;
+        },
+        _interpolateLine3(points, scaler) {
+            let result = [];
+            for (let i = 1; i < points.length; i++) {
+                result = result.concat(new Three.LineCurve3(points[i - 1], points[i]).getPoints(scaler));
+            }
+
+            return result;
+        },
+        _interpolateSplineCurve3(points, scaler) {
+            return new Three.SplineCurve3(points).getPoints(points.length * scaler);
         }
     }
 };
