@@ -28,6 +28,7 @@
 </style>
 
 <script>
+import * as Three from 'three';
 import { hexToRgba } from '@/utils/color';
 
 /**
@@ -210,15 +211,20 @@ export default {
                 }
 
                 const points = [];
-                const height = [];
                 for (const point of path.points) {
-                    this._add3DMeshLine(points, height, point, hexToRgba(path.color));
+                    this._addVector3(points, point);
                 }
+
+                const curve = new Three.SplineCurve3(points).getPoints(50);
 
                 // 添加3D曲线
                 const meshLine = new AMap.Object3D.MeshLine({
-                    path: this._computeBezier(path.points, path.points.length),
-                    height: height,
+                    path: curve.map(p => {
+                        return new AMap.LngLat(p.x, p.y);
+                    }),
+                    height: curve.map(p => {
+                        return p.z;
+                    }),
                     width: 3,
                     color: 'rgba(55,129,240, 1)'
                 });
@@ -248,8 +254,11 @@ export default {
             geometry.vertexColors.push(color.r, color.g, color.b, color.a);
         },
         _add3DMeshLine(path, height, point, color) {
-            // path.push(new AMap.LngLat(point.lng / 100.0, point.lat / 100.0));
+            path.push(new AMap.LngLat(point.lng / 100.0, point.lat / 100.0));
             height.push(this.showAltitude ? point.alt : 100);
+        },
+        _addVector3(path, point) {
+            path.push(new Three.Vector3(point.lng / 100.0, point.lat / 100.0, this.showAltitude ? point.alt : 100));
         },
         _lnglatToG20(lnglat) {
             const result = this.map.lngLatToGeodeticCoord([lnglat.lng / 100.0, lnglat.lat / 100.0]);
@@ -281,33 +290,6 @@ export default {
             }
 
             return null;
-        },
-        _pointOnCubicBezier(cp, t) {
-            const cx = 3.0 * (cp[1].lng - cp[0].lng);
-            const bx = 3.0 * (cp[2].lng - cp[1].lng) - cx;
-            const ax = cp[3].lng - cp[0].lng - cx - bx;
-
-            const cy = 3.0 * (cp[1].lat - cp[0].lat);
-            const by = 3.0 * (cp[2].lat - cp[1].lat) - cy;
-            const ay = cp[3].lat - cp[0].lat - cy - by;
-
-            const tSquared = t * t;
-            const tCubed = tSquared * t;
-
-            const lng = ax * tCubed + bx * tSquared + cx * t + cp[0].lng;
-            const lat = ay * tCubed + by * tSquared + cy * t + cp[0].lat;
-
-            return new AMap.LngLat(lng / 100, lat / 100);
-        },
-        _computeBezier(points, numberOfPoints) {
-            const curve = [];
-            const dt = 1.0 / (numberOfPoints - 1);
-
-            for (let i = 0; i < numberOfPoints; i++) {
-                curve[i] = this._pointOnCubicBezier(points, i * dt);
-            }
-
-            return curve;
         }
     }
 };
