@@ -185,7 +185,7 @@ export default {
         },
         _updatePaths() {
             // 添加3D点集合
-            this.points3D = new AMap.Object3D.RoundPoints();
+            this.points3D = new AMap.Object3D.Points();
             this.points3D.transparent = true;
             this.object3Dlayer.add(this.points3D);
             this.points3D.borderColor = [0.6, 0.8, 1, 1];
