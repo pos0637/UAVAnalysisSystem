@@ -98,9 +98,9 @@ export default {
     mounted() {
         this.timer = setInterval(async () => {
             if (window.amapLoaded) {
+                clearInterval(this.timer);
                 await this._initializeMap();
                 this._updatePaths();
-                clearInterval(this.timer);
             }
         }, 500);
     },
@@ -128,26 +128,28 @@ export default {
                     zooms: [3, 20]
                 });
 
+                // 创建控件
+                this.map.addControl(
+                    new AMap.ControlBar({
+                        showZoomBar: true,
+                        showControlButton: true,
+                        position: {
+                            right: '10px',
+                            top: '10px'
+                        }
+                    })
+                );
+
                 this.map.on('complete', () => {
                     console.debug('地图加载完成');
 
-                    // 创建控件
-                    this.map.addControl(
-                        new AMap.ControlBar({
-                            showZoomBar: true,
-                            showControlButton: true,
-                            position: {
-                                right: '10px',
-                                top: '10px'
-                            }
-                        })
-                    );
+                    if (typeof AMap.Object3DLayer !== 'undefined') {
+                        // 添加3D图层
+                        this.object3Dlayer = new AMap.Object3DLayer({ zIndex: 110, opacity: 1 });
+                        this.map.add(this.object3Dlayer);
 
-                    // 添加3D图层
-                    this.object3Dlayer = new AMap.Object3DLayer({ zIndex: 110, opacity: 1 });
-                    this.map.add(this.object3Dlayer);
-
-                    resolve();
+                        resolve();
+                    }
                 });
 
                 this.map.on('mousemove', e => {
