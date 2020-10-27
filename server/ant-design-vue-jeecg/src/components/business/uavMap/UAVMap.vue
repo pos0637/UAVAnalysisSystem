@@ -96,9 +96,9 @@ export default {
         }
     },
     mounted() {
-        this.timer = setInterval(() => {
+        this.timer = setInterval(async () => {
             if (window.amapLoaded) {
-                this._initializeMap();
+                await this._initializeMap();
                 this._updatePaths();
                 clearInterval(this.timer);
             }
@@ -110,58 +110,62 @@ export default {
     },
     methods: {
         _initializeMap() {
-            this.map && this.map.destroy();
+            return new Promise((resolve, reject) => {
+                this.map && this.map.destroy();
 
-            // 创建地图组件
-            this.map = new AMap.Map('map-container', {
-                resizeEnable: true, // 是否监控地图容器尺寸变化
-                zoom: 17, // 初始化地图层级
-                center: this.center, // 初始化地图中心点
-                rotateEnable: true,
-                pitchEnable: true,
-                pitch: 80,
-                rotation: -15,
-                viewMode: '3D', // 开启3D视图,默认为关闭
-                buildingAnimation: true, // 楼块出现是否带动画
-                expandZoomRange: true,
-                zooms: [3, 20]
-            });
+                // 创建地图组件
+                this.map = new AMap.Map('map-container', {
+                    resizeEnable: true, // 是否监控地图容器尺寸变化
+                    zoom: 17, // 初始化地图层级
+                    center: this.center, // 初始化地图中心点
+                    rotateEnable: true,
+                    pitchEnable: true,
+                    pitch: 80,
+                    rotation: -15,
+                    viewMode: '3D', // 开启3D视图,默认为关闭
+                    buildingAnimation: true, // 楼块出现是否带动画
+                    expandZoomRange: true,
+                    zooms: [3, 20]
+                });
 
-            // 创建控件
-            this.map.addControl(
-                new AMap.ControlBar({
-                    showZoomBar: true,
-                    showControlButton: true,
-                    position: {
-                        right: '10px',
-                        top: '10px'
+                this.map.on('complete', () => {
+                    console.debug('地图加载完成');
+
+                    // 创建控件
+                    this.map.addControl(
+                        new AMap.ControlBar({
+                            showZoomBar: true,
+                            showControlButton: true,
+                            position: {
+                                right: '10px',
+                                top: '10px'
+                            }
+                        })
+                    );
+
+                    // 添加3D图层
+                    this.object3Dlayer = new AMap.Object3DLayer({ zIndex: 110, opacity: 1 });
+                    this.map.add(this.object3Dlayer);
+
+                    resolve();
+                });
+
+                this.map.on('mousemove', e => {
+                    const pixel = e.pixel;
+                    const px = new AMap.Pixel(pixel.x, pixel.y);
+                    const obj = this.map.getObject3DByContainerPos(px, [this.object3Dlayer], false);
+                    if (obj !== null && obj.object === this.points3D) {
+                        if (this.lastPoint !== obj.index) {
+                            this.hintLeft = `${e.pixel.x}px`;
+                            this.hintTop = `${e.pixel.y}px`;
+                            this.lastPoint = obj.index;
+                            this.lastPointInfo = this._getPointInfo(this.lastPoint);
+                        }
+                    } else {
+                        this.lastPoint = null;
+                        this.lastPointInfo = null;
                     }
-                })
-            );
-
-            // 添加3D图层
-            this.object3Dlayer = new AMap.Object3DLayer({ zIndex: 110, opacity: 1 });
-            this.map.add(this.object3Dlayer);
-
-            this.map.on('complete', () => {
-                console.debug('地图加载完成');
-            });
-
-            this.map.on('mousemove', e => {
-                const pixel = e.pixel;
-                const px = new AMap.Pixel(pixel.x, pixel.y);
-                const obj = this.map.getObject3DByContainerPos(px, [this.object3Dlayer], false);
-                if (obj !== null && obj.object === this.points3D) {
-                    if (this.lastPoint !== obj.index) {
-                        this.hintLeft = `${e.pixel.x}px`;
-                        this.hintTop = `${e.pixel.y}px`;
-                        this.lastPoint = obj.index;
-                        this.lastPointInfo = this._getPointInfo(this.lastPoint);
-                    }
-                } else {
-                    this.lastPoint = null;
-                    this.lastPointInfo = null;
-                }
+                });
             });
         },
         _clearPaths() {
