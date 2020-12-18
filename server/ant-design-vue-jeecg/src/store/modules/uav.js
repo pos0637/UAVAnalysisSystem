@@ -53,7 +53,7 @@ const uav = {
         setCenter(state, item) {
             for (const path of state.dataViewPaths) {
                 if (path === item) {
-                    state.center = [path.points[0].lng, path.points[0].lat];
+                    state.center = [path.centerLongitude, path.centerLatitude];
                     return;
                 }
             }

@@ -1,10 +1,10 @@
 <template>
     <div style="width: 100%; height: 100%; position: relative;">
-        <UAVMap />
+        <UAVMap ref="map" />
         <div class="toolbox">
             <UAVToolbox />
             <div class="select-path"><Dropdown ref="paths" :width="120" url="/uav/datav/paths" /><a-button style="margin-left: 8px;" @click="_onAddPathButtonClick">添加</a-button></div>
-            <UAVPathList />
+            <UAVPathList @export="_onExportClick" />
         </div>
     </div>
 </template>
@@ -51,6 +51,9 @@ export default {
                     }
                 });
             }
+        },
+        _onExportClick(item) {
+            this.$refs['map'].export(item.id);
         }
     }
 };

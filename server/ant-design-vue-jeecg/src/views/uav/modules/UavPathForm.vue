@@ -14,6 +14,16 @@
             </a-form-item>
           </a-col>
           <a-col :span="24">
+            <a-form-item label="中心点经度" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <a-input-number v-decorator="['centerLongitude']" placeholder="请输入中心点经度" style="width: 100%"/>
+            </a-form-item>
+          </a-col>
+          <a-col :span="24">
+            <a-form-item label="中心点纬度" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <a-input-number v-decorator="['centerLatitude']" placeholder="请输入中心点纬度" style="width: 100%"/>
+            </a-form-item>
+          </a-col>
+          <a-col :span="24">
             <a-form-item label="轨迹数据文件" :labelCol="labelCol" :wrapperCol="wrapperCol">
               <j-upload v-decorator="['file', validatorRules.file]" :trigger-change="true"></j-upload>
             </a-form-item>
@@ -125,7 +135,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'name','description','file'))
+          this.form.setFieldsValue(pick(this.model,'name','description','centerLongitude','centerLatitude','file'))
         })
       },
       //渲染流程表单数据
@@ -171,7 +181,7 @@
         })
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'name','description','file'))
+        this.form.setFieldsValue(pick(row,'name','description','centerLongitude','centerLatitude','file'))
       },
     }
   }

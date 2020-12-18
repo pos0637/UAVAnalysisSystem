@@ -12,7 +12,6 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('无人机轨迹数据')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -67,7 +66,10 @@
 
         <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)">编辑</a>
-
+          <a-divider type="vertical" />
+          <a @click="handleExport(record)">导出</a>
+          <a-divider type="vertical" />
+          <a @click="handleExportPointCloud(record)">导出点云</a>
           <a-divider type="vertical" />
           <a-dropdown>
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
@@ -130,6 +132,16 @@
             dataIndex: 'description'
           },
           {
+            title:'中心点经度',
+            align:"center",
+            dataIndex: 'centerLongitude'
+          },
+          {
+            title:'中心点纬度',
+            align:"center",
+            dataIndex: 'centerLatitude'
+          },
+          {
             title:'轨迹数据文件',
             align:"center",
             dataIndex: 'file',
@@ -164,6 +176,12 @@
     },
     methods: {
       initDictConfig(){
+      },
+      handleExport(record) {
+        window.location.href = `${window._CONFIG['domianURL']}/uav/datav/exportXls?id=${record.id}`;
+      },
+      handleExportPointCloud(record) {
+        window.location.href = `${window._CONFIG['domianURL']}/uav/datav/exportPointCloud?id=${record.id}`;
       }
     }
   }

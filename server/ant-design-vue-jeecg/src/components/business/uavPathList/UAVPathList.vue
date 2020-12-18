@@ -7,6 +7,7 @@
                         <div class="name">{{ item.name }}</div>
                         <a-button class="button" size="small" shape="circle" :icon="item.visible ? 'eye' : 'eye-invisible'" @click="_onVisibleButtonClick(item)" />
                         <a-button class="button" size="small" shape="circle" icon="bg-colors" @click="_onColorChanged(item)" />
+                        <a-button class="button" size="small" shape="circle" icon="download" @click="_onExportClick(item)" />
                         <a-button class="button" size="small" shape="circle" icon="close" @click="_onCloseButtonClick(item)" />
                     </div>
                 </a-list-item-meta>
@@ -27,7 +28,7 @@
 
 .name {
     display: inline-block;
-    width: 120px;
+    width: 90px;
     margin: 0 4px;
     overflow: hidden;
     vertical-align: middle;
@@ -68,6 +69,9 @@ export default {
         },
         _onPathClick(item) {
             this.$store.commit('setCenter', item);
+        },
+        _onExportClick(item) {
+            this.$emit('export', item);
         }
     }
 };

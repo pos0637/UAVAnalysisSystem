@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 /**
  * @Description: 无人机轨迹数据
  * @Author: jeecg-boot
- * @Date:   2020-09-22
+ * @Date:   2020-12-18
  * @Version: V1.0
  */
 public interface IUavPathService extends IService<UavPath> {

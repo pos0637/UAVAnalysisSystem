@@ -24,7 +24,7 @@ import org.jeecg.common.aspect.annotation.AutoLog;
  /**
  * @Description: 无人机轨迹数据
  * @Author: jeecg-boot
- * @Date:   2020-09-22
+ * @Date:   2020-12-18
  * @Version: V1.0
  */
 @Api(tags="无人机轨迹数据")

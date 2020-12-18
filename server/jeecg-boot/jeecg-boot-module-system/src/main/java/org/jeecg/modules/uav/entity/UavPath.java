@@ -1,9 +1,7 @@
 package org.jeecg.modules.uav.entity;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
-import java.math.BigDecimal;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -11,7 +9,6 @@ import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.jeecgframework.poi.excel.annotation.Excel;
-import org.jeecg.common.aspect.annotation.Dict;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
@@ -20,7 +17,7 @@ import lombok.experimental.Accessors;
 /**
  * @Description: 无人机轨迹数据
  * @Author: jeecg-boot
- * @Date:   2020-09-22
+ * @Date:   2020-12-18
  * @Version: V1.0
  */
 @Data
@@ -62,6 +59,14 @@ public class UavPath implements Serializable {
 	@Excel(name = "描述", width = 15)
     @ApiModelProperty(value = "描述")
     private java.lang.String description;
+	/**中心点经度*/
+	@Excel(name = "中心点经度", width = 15)
+    @ApiModelProperty(value = "中心点经度")
+    private java.lang.Double centerLongitude;
+	/**中心点纬度*/
+	@Excel(name = "中心点纬度", width = 15)
+    @ApiModelProperty(value = "中心点纬度")
+    private java.lang.Double centerLatitude;
 	/**轨迹数据文件*/
 	@Excel(name = "轨迹数据文件", width = 15)
     @ApiModelProperty(value = "轨迹数据文件")
