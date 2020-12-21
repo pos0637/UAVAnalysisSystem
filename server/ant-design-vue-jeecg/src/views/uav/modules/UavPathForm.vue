@@ -24,6 +24,11 @@
             </a-form-item>
           </a-col>
           <a-col :span="24">
+            <a-form-item label="中心点高程" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <a-input-number v-decorator="['centerAltitude']" placeholder="请输入中心点高程" style="width: 100%"/>
+            </a-form-item>
+          </a-col>
+          <a-col :span="24">
             <a-form-item label="轨迹数据文件" :labelCol="labelCol" :wrapperCol="wrapperCol">
               <j-upload v-decorator="['file', validatorRules.file]" :trigger-change="true"></j-upload>
             </a-form-item>
@@ -135,7 +140,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'name','description','centerLongitude','centerLatitude','file'))
+          this.form.setFieldsValue(pick(this.model,'name','description','centerLongitude','centerLatitude','centerAltitude','file'))
         })
       },
       //渲染流程表单数据
@@ -181,7 +186,7 @@
         })
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'name','description','centerLongitude','centerLatitude','file'))
+        this.form.setFieldsValue(pick(row,'name','description','centerLongitude','centerLatitude','centerAltitude','file'))
       },
     }
   }

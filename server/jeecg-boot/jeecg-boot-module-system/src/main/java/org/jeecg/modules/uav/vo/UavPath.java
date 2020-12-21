@@ -56,6 +56,11 @@ public final class UavPath implements Serializable {
     private double centerLatitude;
 
     /**
+     * 中心点高程
+     */
+    private double centerAltitude;
+
+    /**
      * 轨迹点
      */
     private List<Point> points;

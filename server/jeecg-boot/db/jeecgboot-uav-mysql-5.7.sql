@@ -3483,8 +3483,9 @@ CREATE TABLE `uav_path` (
   `sys_org_code` varchar(64) DEFAULT NULL COMMENT '所属部门',
   `name` varchar(32) NOT NULL COMMENT '名称',
   `description` varchar(64) DEFAULT NULL COMMENT '描述',
-  `center_longitude` double NOT NULL COMMENT '中心点经度',
-  `center_latitude` double NOT NULL COMMENT '中心点纬度',
+  `center_longitude` double DEFAULT NULL COMMENT '中心点经度',
+  `center_latitude` double DEFAULT NULL COMMENT '中心点纬度',
+  `center_altitude` double DEFAULT NULL COMMENT '中心点高程',
   `file` varchar(256) NOT NULL COMMENT '轨迹数据文件',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -67,6 +67,10 @@ public class UavPath implements Serializable {
 	@Excel(name = "中心点纬度", width = 15)
     @ApiModelProperty(value = "中心点纬度")
     private java.lang.Double centerLatitude;
+    /**中心点高程*/
+    @Excel(name = "中心点纬度", width = 15)
+    @ApiModelProperty(value = "中心点高程")
+    private java.lang.Double centerAltitude;
 	/**轨迹数据文件*/
 	@Excel(name = "轨迹数据文件", width = 15)
     @ApiModelProperty(value = "轨迹数据文件")
