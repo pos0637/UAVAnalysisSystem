@@ -164,7 +164,7 @@ public final class LasUtils {
             p.z = (int) ((point.getZ() - zMin) / z_scale);
             p.time = point.getTime();
 
-            bos.write(lasSerialize(point));
+            bos.write(lasSerialize(p));
         }
     }
 
@@ -247,20 +247,24 @@ public final class LasUtils {
          * 点数据长度
          */
         public final short pointDataRecordLength;
+
+        /**
+         * 点数据数目
+         */
+        public int numberOfPointRecords;
+
         /**
          * 不同回波点数目 数组长度为5
          */
         public final int[] numberOfPointsByReturn;
+
         /**
          * X、Y、Z刻度因子
          */
         public final double x_scale;
         public final double y_scale;
         public final double z_scale;
-        /**
-         * 点数据数目
-         */
-        public int numberOfPointRecords;
+
         /**
          * X、Y、Z偏移值
          */
