@@ -99,4 +99,39 @@ public final class UavPath implements Serializable {
         @Excel(name = "高程", width = 15)
         private float alt;
     }
+
+    /**
+     * 轨迹点
+     */
+    @Data
+    @Accessors(chain = true)
+    @EqualsAndHashCode(callSuper = false)
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class OffsetPoint implements Serializable {
+        /**
+         * 时间偏移(单位: 毫秒)
+         */
+        @Excel(name = "采样时间", width = 15)
+        public long time;
+
+        /**
+         * 经度偏移(单位: 米)
+         */
+        @Excel(name = "X", width = 15)
+        public double x;
+
+
+        /**
+         * 纬度偏移(单位: 米)
+         */
+        @Excel(name = "Y", width = 15)
+        public double y;
+
+        /**
+         * 高度偏移(单位: 米)
+         */
+        @Excel(name = "Z", width = 15)
+        public double z;
+    }
 }
