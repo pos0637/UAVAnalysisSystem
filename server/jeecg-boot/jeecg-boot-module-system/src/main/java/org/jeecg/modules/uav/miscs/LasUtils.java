@@ -114,6 +114,10 @@ public final class LasUtils {
 
         // generate las file body
         for (UavPath.OffsetPoint point : points) {
+            if (point == null) {
+                continue;
+            }
+
             if (xMax < point.getX()) {
                 xMax = point.getX();
             }
@@ -151,6 +155,10 @@ public final class LasUtils {
 
         // write las file body
         for (UavPath.OffsetPoint point : points) {
+            if (point == null) {
+                continue;
+            }
+
             final LasPoint p = new LasPoint();
             p.intensity = 0;
             p.returnNumber = 0;

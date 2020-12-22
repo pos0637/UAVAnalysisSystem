@@ -9,6 +9,7 @@ import cn.hutool.core.text.csv.CsvUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jeecg.modules.uav.vo.UavPath;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -92,7 +93,7 @@ public final class NMEAUtils {
                 if (GPGGA.equals(cols.get(0))) {
                     // GPS定位信息
                     list.add(new UavPath.Point(
-                            DATE_FORMAT.parse("1970-01-01 " + cols.get(1)),
+                            cols.get(1),
                             Convert.toFloat(cols.get(4)),
                             Convert.toFloat(cols.get(2)),
                             Convert.toFloat(cols.get(9))
@@ -116,7 +117,7 @@ public final class NMEAUtils {
      * @param centerAltitude  原点高程
      * @return 偏移轨迹点集合
      */
-    public static List<UavPath.OffsetPoint> getOffsetPoints(final String path, final Double centerLongitude, final Double centerLatitude, final Double centerAltitude) {
+    public static List<UavPath.OffsetPoint> getOffsetPoints(final String path, final Double centerLongitude, final Double centerLatitude, final Double centerAltitude) throws ParseException {
         final List<UavPath.Point> list = getPoints(path);
         if (list == null) {
             return null;
@@ -127,16 +128,23 @@ public final class NMEAUtils {
         }
 
         // 计算原点坐标
-        final long time = list.get(0).getTime().getTime();
+        final long time = DATE_FORMAT.parse("1970-01-01 " + list.get(0).getTime()).getTime();
         final double centerLongitude1 = centerLongitude != null ? centerLongitude : list.get(0).getLng();
         final double centerLatitude1 = centerLatitude != null ? centerLatitude : list.get(0).getLat();
         final double centerAltitude1 = centerAltitude != null ? centerAltitude : list.get(0).getAlt();
 
-        return list.stream().map(p -> new UavPath.OffsetPoint(
-                p.getTime().getTime() - time,
-                getDistance(p.getLng() / 100.0, 0.0, centerLongitude1 / 100.0, 0.0),
-                getDistance(0, p.getLat() / 100.0, 0.0, centerLatitude1 / 100.0),
-                p.getAlt() - centerAltitude1
-        )).collect(Collectors.toList());
+        return list.stream().map(p -> {
+            try {
+                return new UavPath.OffsetPoint(
+                        DATE_FORMAT.parse("1970-01-01 " + p.getTime()).getTime() - time,
+                        getDistance(p.getLng() / 100.0, 0.0, centerLongitude1 / 100.0, 0.0),
+                        getDistance(0, p.getLat() / 100.0, 0.0, centerLatitude1 / 100.0),
+                        p.getAlt() - centerAltitude1
+                );
+            } catch (ParseException e) {
+                log.error(null, e);
+                return null;
+            }
+        }).collect(Collectors.toList());
     }
 }
