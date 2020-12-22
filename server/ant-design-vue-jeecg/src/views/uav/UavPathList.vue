@@ -142,6 +142,11 @@
             dataIndex: 'centerLatitude'
           },
           {
+            title:'中心点高程',
+            align:"center",
+            dataIndex: 'centerAltitude'
+          },
+          {
             title:'轨迹数据文件',
             align:"center",
             dataIndex: 'file',
