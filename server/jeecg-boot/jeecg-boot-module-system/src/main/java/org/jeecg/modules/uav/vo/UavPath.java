@@ -84,20 +84,20 @@ public final class UavPath implements Serializable {
          * 经度
          */
         @Excel(name = "经度", width = 15)
-        private float lng;
+        private double lng;
 
 
         /**
          * 纬度
          */
         @Excel(name = "纬度", width = 15)
-        private float lat;
+        private double lat;
 
         /**
          * 高程
          */
         @Excel(name = "高程", width = 15)
-        private float alt;
+        private double alt;
     }
 
     /**

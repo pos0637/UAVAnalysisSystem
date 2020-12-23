@@ -43,6 +43,70 @@ public final class NMEAUtils {
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
+    private static double transformLat(final double x, final double y) {
+        double ret = -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * x * y + 0.2 * Math.sqrt(Math.abs(x));
+        ret += ((20.0 * Math.sin(6.0 * x * Math.PI) + 20.0 * Math.sin(2.0 * x * Math.PI)) * 2.0) / 3.0;
+        ret += ((20.0 * Math.sin(y * Math.PI) + 40.0 * Math.sin((y / 3.0) * Math.PI)) * 2.0) / 3.0;
+        ret += ((160.0 * Math.sin((y / 12.0) * Math.PI) + 320 * Math.sin((y * Math.PI) / 30.0)) * 2.0) / 3.0;
+        return ret;
+    }
+
+    private static double transformLng(final double x, final double y) {
+        double ret = 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * Math.sqrt(Math.abs(x));
+        ret += ((20.0 * Math.sin(6.0 * x * Math.PI) + 20.0 * Math.sin(2.0 * x * Math.PI)) * 2.0) / 3.0;
+        ret += ((20.0 * Math.sin(x * Math.PI) + 40.0 * Math.sin((x / 3.0) * Math.PI)) * 2.0) / 3.0;
+        ret += ((150.0 * Math.sin((x / 12.0) * Math.PI) + 300.0 * Math.sin((x / 30.0) * Math.PI)) * 2.0) / 3.0;
+        return ret;
+    }
+
+    private static UavPath.Point delta(final UavPath.Point point) {
+        // Krasovsky 1940
+        //
+        // a = 6378245.0, 1/f = 298.3
+        // b = a * (1 - f)
+        // ee = (a^2 - b^2) / a^2;
+        final double a = 6378245.0; //  a: 卫星椭球坐标投影到平面地图坐标系的投影因子。
+        final double ee = 0.00669342162296594323; //  ee: 椭球的偏心率。
+        double lat = transformLat(point.getLng() - 105.0, point.getLat() - 35.0);
+        double lng = transformLng(point.getLng() - 105.0, point.getLat() - 35.0);
+        final double radLat = (point.getLat() / 180.0) * Math.PI;
+        double magic = Math.sin(radLat);
+        magic = 1 - ee * magic * magic;
+
+        final double sqrtMagic = Math.sqrt(magic);
+        lat = (lat * 180.0) / (((a * (1 - ee)) / (magic * sqrtMagic)) * Math.PI);
+        lng = (lng * 180.0) / ((a / sqrtMagic) * Math.cos(radLat) * Math.PI);
+
+        return new UavPath.Point(point.getTime(), point.getLng() + lng, point.getLat() + lat, point.getAlt());
+    }
+
+    private static boolean outOfChina(final UavPath.Point point) {
+        return (point.getLng() < 72.004 || point.getLng() > 137.8347 || point.getLat() < 0.8293 || point.getLat() > 55.8271);
+    }
+
+    /**
+     * WGS-84坐标转GCJ-02坐标
+     *
+     * @param point WGS-84坐标点
+     * @return GCJ-02坐标点
+     */
+    public static UavPath.Point gcjEncrypt(final UavPath.Point point) {
+        return outOfChina(point) ? point : delta(point);
+    }
+
+    /**
+     * 计算经纬度 ddmm.mmmmmmm -> dd.ddddd
+     *
+     * @param lngLat 经纬度
+     * @return 经纬度
+     */
+    private static double getLngLat(final String lngLat) {
+        final int dot = lngLat.indexOf('.');
+        final String d = lngLat.substring(0, dot - 2);
+        final String m = lngLat.substring(dot - 2);
+        return Convert.toDouble(d) + (Convert.toDouble(m) / 60.0);
+    }
+
     /**
      * 角度转弧度
      *
@@ -92,12 +156,12 @@ public final class NMEAUtils {
                 List<String> cols = csvRow.getRawList();
                 if (GPGGA.equals(cols.get(0))) {
                     // GPS定位信息
-                    list.add(new UavPath.Point(
+                    list.add(gcjEncrypt(new UavPath.Point(
                             cols.get(1),
-                            Convert.toFloat(cols.get(4)),
-                            Convert.toFloat(cols.get(2)),
+                            getLngLat(cols.get(4)),
+                            getLngLat(cols.get(2)),
                             Convert.toFloat(cols.get(9))
-                    ));
+                    )));
                 }
             }
 
@@ -137,8 +201,8 @@ public final class NMEAUtils {
             try {
                 return new UavPath.OffsetPoint(
                         DATE_FORMAT.parse("1970-01-01 " + p.getTime()).getTime() - time,
-                        getDistance(p.getLng() / 100.0, 0.0, centerLongitude1 / 100.0, 0.0) * (p.getLng() > centerLongitude1 ? 1.0 : -1.0),
-                        getDistance(0, p.getLat() / 100.0, 0.0, centerLatitude1 / 100.0) * (p.getLat() > centerLatitude1 ? 1.0 : -1.0),
+                        getDistance(p.getLng(), 0.0, centerLongitude1, 0.0) * (p.getLng() > centerLongitude1 ? 1.0 : -1.0),
+                        getDistance(0, p.getLat(), 0.0, centerLatitude1) * (p.getLat() > centerLatitude1 ? 1.0 : -1.0),
                         p.getAlt() - centerAltitude1
                 );
             } catch (ParseException e) {
