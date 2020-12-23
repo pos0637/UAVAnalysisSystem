@@ -125,4 +125,29 @@ public final class DataVisualization {
 
         response.flushBuffer();
     }
+
+    @RequestMapping(value = "/exportPointCloudWithFile")
+    public final void exportPointCloudWithFile(@RequestParam(name = "filePath", required = true) String fileName, final HttpServletResponse response) throws Exception {
+        final String filePath = uploadpath + File.separator + fileName;
+        final File file = new File(filePath);
+        if (!file.exists()) {
+            return;
+        }
+
+        final String name = "无人机轨迹数据_" + fileName + ".las";
+        response.setHeader("Content-type", "application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(name, StandardCharsets.UTF_8.name()) + "\";charset=UTF-8");
+
+        try (final BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream())) {
+            final List<org.jeecg.modules.uav.vo.UavPath.OffsetPoint> list = NMEAUtils.getOffsetPoints(filePath, null, null, null);
+            if (list != null) {
+                LasUtils.generateLasFile(bos, list);
+            }
+        } catch (Exception e) {
+            log.error(null, e);
+            throw e;
+        }
+
+        response.flushBuffer();
+    }
 }

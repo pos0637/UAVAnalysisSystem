@@ -1,4 +1,4 @@
-package org.jeecg.modules.demo.com.jeecg.controller;
+package org.jeecg.modules.uav.controller;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,11 +9,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
-import org.jeecg.modules.demo.com.jeecg.entity.UavTask;
-import org.jeecg.modules.demo.com.jeecg.service.IUavTaskService;
+import org.jeecg.modules.uav.entity.UavTask;
+import org.jeecg.modules.uav.service.IUavTaskService;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -36,136 +37,135 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jeecg.common.aspect.annotation.AutoLog;
 
- /**
+/**
  * @Description: 测试任务
  * @Author: jeecg-boot
- * @Date:   2020-12-21
+ * @Date: 2020-12-21
  * @Version: V1.0
  */
-@Api(tags="测试任务")
+@Api(tags = "测试任务")
 @RestController
-@RequestMapping("/com.jeecg/uavTask")
+@RequestMapping("/uav/uavTask")
 @Slf4j
 public class UavTaskController extends JeecgController<UavTask, IUavTaskService> {
-	@Autowired
-	private IUavTaskService uavTaskService;
-	
-	/**
-	 * 分页列表查询
-	 *
-	 * @param uavTask
-	 * @param pageNo
-	 * @param pageSize
-	 * @param req
-	 * @return
-	 */
-	@AutoLog(value = "测试任务-分页列表查询")
-	@ApiOperation(value="测试任务-分页列表查询", notes="测试任务-分页列表查询")
-	@GetMapping(value = "/list")
-	public Result<?> queryPageList(UavTask uavTask,
-								   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
-								   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
-								   HttpServletRequest req) {
-		QueryWrapper<UavTask> queryWrapper = QueryGenerator.initQueryWrapper(uavTask, req.getParameterMap());
-		Page<UavTask> page = new Page<UavTask>(pageNo, pageSize);
-		IPage<UavTask> pageList = uavTaskService.page(page, queryWrapper);
-		return Result.ok(pageList);
-	}
-	
-	/**
-	 *   添加
-	 *
-	 * @param uavTask
-	 * @return
-	 */
-	@AutoLog(value = "测试任务-添加")
-	@ApiOperation(value="测试任务-添加", notes="测试任务-添加")
-	@PostMapping(value = "/add")
-	public Result<?> add(@RequestBody UavTask uavTask) {
-		uavTaskService.save(uavTask);
-		return Result.ok("添加成功！");
-	}
-	
-	/**
-	 *  编辑
-	 *
-	 * @param uavTask
-	 * @return
-	 */
-	@AutoLog(value = "测试任务-编辑")
-	@ApiOperation(value="测试任务-编辑", notes="测试任务-编辑")
-	@PutMapping(value = "/edit")
-	public Result<?> edit(@RequestBody UavTask uavTask) {
-		uavTaskService.updateById(uavTask);
-		return Result.ok("编辑成功!");
-	}
-	
-	/**
-	 *   通过id删除
-	 *
-	 * @param id
-	 * @return
-	 */
-	@AutoLog(value = "测试任务-通过id删除")
-	@ApiOperation(value="测试任务-通过id删除", notes="测试任务-通过id删除")
-	@DeleteMapping(value = "/delete")
-	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
-		uavTaskService.removeById(id);
-		return Result.ok("删除成功!");
-	}
-	
-	/**
-	 *  批量删除
-	 *
-	 * @param ids
-	 * @return
-	 */
-	@AutoLog(value = "测试任务-批量删除")
-	@ApiOperation(value="测试任务-批量删除", notes="测试任务-批量删除")
-	@DeleteMapping(value = "/deleteBatch")
-	public Result<?> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
-		this.uavTaskService.removeByIds(Arrays.asList(ids.split(",")));
-		return Result.ok("批量删除成功!");
-	}
-	
-	/**
-	 * 通过id查询
-	 *
-	 * @param id
-	 * @return
-	 */
-	@AutoLog(value = "测试任务-通过id查询")
-	@ApiOperation(value="测试任务-通过id查询", notes="测试任务-通过id查询")
-	@GetMapping(value = "/queryById")
-	public Result<?> queryById(@RequestParam(name="id",required=true) String id) {
-		UavTask uavTask = uavTaskService.getById(id);
-		if(uavTask==null) {
-			return Result.error("未找到对应数据");
-		}
-		return Result.ok(uavTask);
-	}
+    @Autowired
+    private IUavTaskService uavTaskService;
 
     /**
-    * 导出excel
-    *
-    * @param request
-    * @param uavTask
-    */
+     * 分页列表查询
+     *
+     * @param uavTask
+     * @param pageNo
+     * @param pageSize
+     * @param req
+     * @return
+     */
+    @AutoLog(value = "测试任务-分页列表查询")
+    @ApiOperation(value = "测试任务-分页列表查询", notes = "测试任务-分页列表查询")
+    @GetMapping(value = "/list")
+    public Result<?> queryPageList(UavTask uavTask,
+                                   @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+                                   @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                                   HttpServletRequest req) {
+        QueryWrapper<UavTask> queryWrapper = QueryGenerator.initQueryWrapper(uavTask, req.getParameterMap());
+        Page<UavTask> page = new Page<UavTask>(pageNo, pageSize);
+        IPage<UavTask> pageList = uavTaskService.page(page, queryWrapper);
+        return Result.ok(pageList);
+    }
+
+    /**
+     * 添加
+     *
+     * @param uavTask
+     * @return
+     */
+    @AutoLog(value = "测试任务-添加")
+    @ApiOperation(value = "测试任务-添加", notes = "测试任务-添加")
+    @PostMapping(value = "/add")
+    public Result<?> add(@RequestBody UavTask uavTask) {
+        uavTaskService.save(uavTask);
+        return Result.ok("添加成功！");
+    }
+
+    /**
+     * 编辑
+     *
+     * @param uavTask
+     * @return
+     */
+    @AutoLog(value = "测试任务-编辑")
+    @ApiOperation(value = "测试任务-编辑", notes = "测试任务-编辑")
+    @PutMapping(value = "/edit")
+    public Result<?> edit(@RequestBody UavTask uavTask) {
+        uavTaskService.updateById(uavTask);
+        return Result.ok("编辑成功!");
+    }
+
+    /**
+     * 通过id删除
+     *
+     * @param id
+     * @return
+     */
+    @AutoLog(value = "测试任务-通过id删除")
+    @ApiOperation(value = "测试任务-通过id删除", notes = "测试任务-通过id删除")
+    @DeleteMapping(value = "/delete")
+    public Result<?> delete(@RequestParam(name = "id", required = true) String id) {
+        uavTaskService.removeById(id);
+        return Result.ok("删除成功!");
+    }
+
+    /**
+     * 批量删除
+     *
+     * @param ids
+     * @return
+     */
+    @AutoLog(value = "测试任务-批量删除")
+    @ApiOperation(value = "测试任务-批量删除", notes = "测试任务-批量删除")
+    @DeleteMapping(value = "/deleteBatch")
+    public Result<?> deleteBatch(@RequestParam(name = "ids", required = true) String ids) {
+        this.uavTaskService.removeByIds(Arrays.asList(ids.split(",")));
+        return Result.ok("批量删除成功!");
+    }
+
+    /**
+     * 通过id查询
+     *
+     * @param id
+     * @return
+     */
+    @AutoLog(value = "测试任务-通过id查询")
+    @ApiOperation(value = "测试任务-通过id查询", notes = "测试任务-通过id查询")
+    @GetMapping(value = "/queryById")
+    public Result<?> queryById(@RequestParam(name = "id", required = true) String id) {
+        UavTask uavTask = uavTaskService.getById(id);
+        if (uavTask == null) {
+            return Result.error("未找到对应数据");
+        }
+        return Result.ok(uavTask);
+    }
+
+    /**
+     * 导出excel
+     *
+     * @param request
+     * @param uavTask
+     */
     @RequestMapping(value = "/exportXls")
     public ModelAndView exportXls(HttpServletRequest request, UavTask uavTask) {
         return super.exportXls(request, uavTask, UavTask.class, "测试任务");
     }
 
     /**
-      * 通过excel导入数据
-    *
-    * @param request
-    * @param response
-    * @return
-    */
+     * 通过excel导入数据
+     *
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
         return super.importExcel(request, response, UavTask.class);
     }
-
 }
