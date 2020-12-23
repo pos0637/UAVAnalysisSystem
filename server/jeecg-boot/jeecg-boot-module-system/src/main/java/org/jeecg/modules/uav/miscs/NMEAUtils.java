@@ -137,8 +137,8 @@ public final class NMEAUtils {
             try {
                 return new UavPath.OffsetPoint(
                         DATE_FORMAT.parse("1970-01-01 " + p.getTime()).getTime() - time,
-                        getDistance(p.getLng() / 100.0, 0.0, centerLongitude1 / 100.0, 0.0),
-                        getDistance(0, p.getLat() / 100.0, 0.0, centerLatitude1 / 100.0),
+                        getDistance(p.getLng() / 100.0, 0.0, centerLongitude1 / 100.0, 0.0) * (p.getLng() > centerLongitude1 ? 1.0 : -1.0),
+                        getDistance(0, p.getLat() / 100.0, 0.0, centerLatitude1 / 100.0) * (p.getLat() > centerLatitude1 ? 1.0 : -1.0),
                         p.getAlt() - centerAltitude1
                 );
             } catch (ParseException e) {
