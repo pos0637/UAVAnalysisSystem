@@ -37,28 +37,6 @@ import { axios } from '@/utils/request';
  */
 const altitudeCenter = 500.0;
 
-/**
- * 地球赤道半径(公里)
- */
-const EARTH_RADIUS = 6378.137;
-
-function deg2Rad(degree) {
-    return (degree * Math.PI) / 180.0;
-}
-
-function getDistance(lng1, lat1, lng2, lat2) {
-    const rad1 = deg2Rad(lat1);
-    const rad2 = deg2Rad(lat2);
-    const a = rad1 - rad2;
-    const b = deg2Rad(lng1) - deg2Rad(lng2);
-
-    let distance = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(rad1) * Math.cos(rad2) * Math.pow(Math.sin(b / 2), 2)));
-    distance = distance * EARTH_RADIUS;
-    distance = Math.round(distance * 10000.0) / 10000.0;
-
-    return distance * 1000;
-}
-
 export default {
     name: 'UAVMap',
     data() {
@@ -87,7 +65,7 @@ export default {
         },
         center() {
             const center = this.$store.state.uav.center;
-            return [center[0] / 100.0, center[1] / 100.0];
+            return [center[0], center[1]];
         }
     },
     watch: {
@@ -263,7 +241,7 @@ export default {
             geometry.vertexColors.push(color.r, color.g, color.b, color.a);
         },
         _lnglatToG20(lnglat) {
-            const result = this.map.lngLatToGeodeticCoord([lnglat.lng / 100.0, lnglat.lat / 100.0]);
+            const result = this.map.lngLatToGeodeticCoord([lnglat.lng, lnglat.lat]);
             result.x = AMap.Util.format(result.x, 3);
             result.y = AMap.Util.format(result.y, 3);
             result.z = this.showAltitude ? this._calcAltitude(lnglat.alt, this.altitudeScaler) : -altitudeCenter;
@@ -338,30 +316,6 @@ export default {
             rgba.b -= p * rgba.b;
 
             return rgba;
-        },
-        export(id) {
-            const paths = this.paths;
-            for (const path of paths) {
-                if (path.id === id) {
-                    let points = '';
-                    for (const point of path.points) {
-                        const x = getDistance(point.lng / 100.0, 0.0, path.centerLongitude / 100.0, 0.0);
-                        const y = getDistance(0, point.lat / 100.0, 0.0, path.centerLatitude / 100.0);
-                        points += `${x},${y},${point.alt}\r\n`;
-                    }
-                    this._exportFile(`${path.name}.xyz`, points);
-                    return;
-                }
-            }
-        },
-        _exportFile(filename, content) {
-            const element = document.createElement('a');
-            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
-            element.setAttribute('download', filename);
-            element.style.display = 'none';
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
         }
     }
 };
