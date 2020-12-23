@@ -29,10 +29,10 @@ public class CalcController {
      * 最大半径分析
      *
      * @param params 测试参数
-     * @return
+     * @return 返回值
      */
     @PostMapping(value = "/radius")
-    public Result<?> maxRadius(@RequestBody RadiusParams params) {
+    public Result<?> maxRadius(@RequestBody RadiusParams params) throws Exception {
         return Result.ok(service.getMaxRadius(params));
     }
 
@@ -40,10 +40,10 @@ public class CalcController {
      * 最大平飞速度
      *
      * @param params 测试参数
-     * @return
+     * @return 返回值
      */
     @PostMapping(value = "/pfs")
-    public Result<?> maxPFS(@RequestBody PFSParams params) {
+    public Result<?> maxPFS(@RequestBody PFSParams params) throws Exception {
         return Result.ok(service.getMaxPFS(params));
     }
 
@@ -51,85 +51,87 @@ public class CalcController {
      * 最大爬升速率
      *
      * @param params 测试参数
-     * @return
+     * @return 返回值
      */
     @PostMapping(value = "/cs")
-    public Result<?> maxPFS(@RequestBody CSParams params) {
+    public Result<?> maxPFS(@RequestBody CSParams params) throws Exception {
         return Result.ok(service.getMaxCS(params));
     }
 
     /**
      * 高度保持性能
      *
-     * @return
+     * @param params 测试参数
+     * @return 返回值
      */
     @PostMapping(value = "/hrp")
-    public Result hrp(@RequestBody HRPParams params) {
+    public Result hrp(@RequestBody HRPParams params) throws Exception {
         return Result.ok(service.getHRP(params));
     }
 
     /**
      * 速度保持性能
      *
-     * @return
+     * @param params 测试参数
+     * @return 返回值
      */
     @PostMapping(value = "/srp")
-    public Result srp(@RequestBody HRPParams params) {
+    public Result srp(@RequestBody HRPParams params) throws Exception {
         return Result.ok(service.getSRP(params));
     }
 
     /**
      * 定点悬停
      *
-     * @param params
-     * @return
+     * @param params 计算参数
+     * @return 返回值
      */
     @PostMapping(value = "/fph")
-    public Result fph(@RequestBody FPHParams params) {
+    public Result fph(@RequestBody FPHParams params) throws Exception {
         return Result.ok(service.getFPH(params));
     }
 
     /**
      * 空载悬停
      *
-     * @param params
-     * @return
+     * @param params 计算参数
+     * @return 返回值
      */
     @PostMapping(value = "/nlh")
-    public Result nlh(@RequestBody NLHParams params) {
+    public Result nlh(@RequestBody NLHParams params) throws Exception {
         return Result.ok(service.getNLH(params));
     }
 
     /**
      * 空载平飞
      *
-     * @param params
-     * @return
+     * @param params 计算参数
+     * @return 返回值
      */
     @PostMapping(value = "/nlp")
-    public Result nlp(@RequestBody NLHParams params) {
+    public Result nlp(@RequestBody NLHParams params) throws Exception {
         return Result.ok(service.getNLP(params));
     }
 
     /**
      * 满载悬停
      *
-     * @param params
-     * @return
+     * @param params 计算参数
+     * @return 返回值
      */
     @PostMapping(value = "/flh")
-    public Result flh(@RequestBody NLHParams params) {
+    public Result flh(@RequestBody NLHParams params) throws Exception {
         return Result.ok(service.getFLH(params));
     }
 
     /**
      * 满载平飞
      *
-     * @param params
-     * @return
+     * @param params 计算参数
+     * @return 返回值
      */
     @PostMapping(value = "/flp")
-    public Result flp(@RequestBody NLHParams params) {
+    public Result flp(@RequestBody NLHParams params) throws Exception {
         return Result.ok(service.getFLP(params));
     }
 }
