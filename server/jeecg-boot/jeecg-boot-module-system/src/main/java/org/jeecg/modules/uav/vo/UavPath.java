@@ -78,7 +78,7 @@ public final class UavPath implements Serializable {
          * 时间
          */
         @Excel(name = "采样时间", width = 15)
-        private Date time;
+        private String time;
 
         /**
          * 经度
