@@ -2538,7 +2538,8 @@ insert  into `sys_permission`(`id`,`parent_id`,`name`,`url`,`component`,`compone
 ('fb367426764077dcf94640c843733985','2a470fc0c3954d9dbb61de6d80846549','一对多示例','/jeecg/JeecgOrderMainList','jeecg/JeecgOrderMainList',NULL,NULL,1,NULL,NULL,2.00,0,NULL,1,1,NULL,0,NULL,'admin','2019-02-15 16:24:11','admin','2019-02-18 10:50:14',0,0,NULL,NULL),
 ('fba41089766888023411a978d13c0aa4','e41b69c57a941a3bbcce45032fe57605','AUTO树表单列表','/online/cgformTreeList/:code','modules/online/cgform/auto/OnlCgformTreeList',NULL,NULL,1,NULL,'1',9.00,0,NULL,1,1,NULL,1,NULL,'admin','2019-05-21 14:46:50','admin','2019-06-11 13:52:52',0,0,'1',NULL),
 ('fc810a2267dd183e4ef7c71cc60f4670','700b7f95165c46cc7a78bf227aa8fed3','请求追踪','/monitor/HttpTrace','modules/monitor/HttpTrace',NULL,NULL,1,NULL,NULL,4.00,0,NULL,1,1,NULL,0,NULL,'admin','2019-04-02 09:46:19','admin','2019-04-02 11:37:27',0,0,NULL,NULL),
-('fedfbf4420536cacc0218557d263dfea','6e73eb3c26099c191bf03852ee1310a1','新消息通知','/account/settings/notification','account/settings/Notification',NULL,NULL,1,'NotificationSettings',NULL,NULL,NULL,'',1,1,NULL,NULL,NULL,NULL,'2018-12-26 19:02:05',NULL,NULL,0,0,NULL,NULL);
+('fedfbf4420536cacc0218557d263dfea','6e73eb3c26099c191bf03852ee1310a1','新消息通知','/account/settings/notification','account/settings/Notification',NULL,NULL,1,'NotificationSettings',NULL,NULL,NULL,'',1,1,NULL,NULL,NULL,NULL,'2018-12-26 19:02:05',NULL,NULL,0,0,NULL,NULL),
+('1340924426194939905', '', '测试任务', '/uav/uavtasklist', 'uav/task/UavTaskList', NULL, NULL, 0, NULL, '1', 1.00, 0, NULL, 1, 1, 0, 0, NULL, 'admin', '2020-12-21 15:37:51', 'admin', '2020-12-21 15:58:27', 0, 0, '1', 0);
 
 /*Table structure for table `sys_permission_data_rule` */
 
@@ -2732,6 +2733,7 @@ insert  into `sys_role_permission`(`id`,`role_id`,`permission_id`,`data_rule_ids
 ('1281494684632473602','f6817f48af4fb3af11b9e8bf182f618b','1265162119913824258',NULL,'2020-07-10 15:45:16','127.0.0.1'),
 ('1308315216985395202','f6817f48af4fb3af11b9e8bf182f618b','1308315066988695554',NULL,'2020-09-22 16:00:30','127.0.0.1'),
 ('1308315216993783810','f6817f48af4fb3af11b9e8bf182f618b','1308315162434277378',NULL,'2020-09-22 16:00:30','127.0.0.1'),
+('1340925297901334529','f6817f48af4fb3af11b9e8bf182f618b', '1340924426194939905', NULL, '2020-12-21 15:41:19', '127.0.0.1')
 ('1308318947802025985','f6817f48af4fb3af11b9e8bf182f618b','1308318904302899201',NULL,'2020-09-22 16:15:19','127.0.0.1'),
 ('145eac8dd88eddbd4ce0a800ab40a92c','e51758fa916c881624b046d26bd09230','08e6b9dc3c04489c8e1ff2ce6f105aa4',NULL,NULL,NULL),
 ('154edd0599bd1dc2c7de220b489cd1e2','f6817f48af4fb3af11b9e8bf182f618b','7ac9eb9ccbde2f7a033cd4944272bf1e',NULL,NULL,NULL),
@@ -3490,6 +3492,8 @@ CREATE TABLE `uav_path` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+DROP TABLE IF EXISTS `uav_task`;
+
 CREATE TABLE `uav_task` (
   `id` varchar(36) NOT NULL,
   `create_by` varchar(50) DEFAULT NULL COMMENT '创建人',
@@ -3501,6 +3505,8 @@ CREATE TABLE `uav_task` (
   `test_date` datetime DEFAULT NULL COMMENT '测试时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `uav_task_item`;
 
 CREATE TABLE `uav_task_item` (
   `id` varchar(36) NOT NULL,
