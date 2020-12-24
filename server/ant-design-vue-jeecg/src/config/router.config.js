@@ -373,13 +373,13 @@ export const constantRouterMap = [
         children: [
             {
                 path: '/uav/task/info',
-                name: 'TaskList',
+                name: 'TaskInfo',
                 component: () => import('@/views/uav/task/UavTaskInfo'),
                 meta: { title: '任务信息' }
             },
             {
                 path: '/task/info',
-                name: 'TaskInfo',
+                name: 'TaskList',
                 component: () => import('@/views/uav/task/UavTaskList'),
                 meta: { title: '检测任务' }
             }
