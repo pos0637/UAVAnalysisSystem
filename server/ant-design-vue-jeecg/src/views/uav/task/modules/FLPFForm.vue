@@ -42,7 +42,7 @@
                 </a-tab-pane>
             </a-tabs>
             <a-form-item label="运行时间" :labelCol="{ lg: { span: 6 }, sm: { span: 6 } }" :wrapperCol="{ lg: { span: 15 }, sm: { span: 15 } }">
-                <a-input-number disabled style="width: 100%" :value="value" name="value" placeholder="自动计算" />
+                <a-input disabled style="width: 100%" :value="value" name="value" placeholder="自动计算" suffix="s" />
             </a-form-item>
             <a-row style="text-align: center">
                 <a-col>

@@ -8,7 +8,7 @@
                 <a-input-number style="width: 100%" v-decorator="['h2', { rules: [{ required: true, message: '请输入起飞点海拔' }] }]" name="h2" placeholder="请输入起飞点海拔" />
             </a-form-item>
             <a-form-item label="最大飞行海拔高度" :labelCol="{ lg: { span: 6 }, sm: { span: 6 } }" :wrapperCol="{ lg: { span: 15 }, sm: { span: 15 } }">
-                <a-input-number disabled style="width: 100%" :value="h3" placeholder="自动计算" />
+                <a-input disabled style="width: 100%" :value="h3" placeholder="自动计算" suffix="m" />
             </a-form-item>
             <a-row style="text-align: center">
                 <a-col>

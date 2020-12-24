@@ -56,7 +56,7 @@
             </a-tabs>
 
             <a-form-item label="最大平飞速度" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                <a-input-number disabled style="width: 100%" :value="value" name="value" placeholder="自动计算" />
+                <a-input disabled style="width: 100%" :value="value" name="value" placeholder="自动计算" suffix="m/s" />
             </a-form-item>
             <a-row style="text-align: center">
                 <a-col>

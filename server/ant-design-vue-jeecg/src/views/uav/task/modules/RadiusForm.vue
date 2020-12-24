@@ -93,7 +93,7 @@
         <a-row class="form-row" :gutter="16" style="margin-top: 10px">
             <a-col :lg="12">
                 <a-form-item label="最大作业半径" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input-number disabled style="width: 100%" :value="value" name="radius" placeholder="自动计算" />
+                    <a-input disabled style="width: 100%" :value="value" name="radius" placeholder="自动计算" suffix="m" />
                 </a-form-item>
             </a-col>
             <a-col :lg="12">
