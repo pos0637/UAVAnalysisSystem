@@ -371,14 +371,14 @@ export const constantRouterMap = [
         component: TabLayout,
         meta: { title: '任务列表', icon: 'dashboard' },
         children: [
+            // {
+            //     path: '/uav/task/info',
+            //     name: 'TaskInfo',
+            //     component: () => import('@/views/uav/task/UavTaskInfo'),
+            //     meta: { title: '任务信息' }
+            // },
             {
-                path: '/uav/task/info',
-                name: 'TaskInfo',
-                component: () => import('@/views/uav/task/UavTaskInfo'),
-                meta: { title: '任务信息' }
-            },
-            {
-                path: '/task/info',
+                path: '/uav/uavtasklist',
                 name: 'TaskList',
                 component: () => import('@/views/uav/task/UavTaskList'),
                 meta: { title: '检测任务' }
